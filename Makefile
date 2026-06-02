@@ -38,11 +38,13 @@ rebuild: stop ## Rebuilds the web image without cache
 
 fix:
 	set -o allexport; source ./src/.env; docker-compose exec -T invoice-web sh -c './vendor/bin/pint ./app/'
+	set -o allexport; source ./src/.env; docker-compose exec -T invoice-web sh -c './vendor/bin/rector process app/'
 
 quality:
 	#set -o allexport; source ./src/.env; docker-compose exec -T invoice-web composer audit
 	set -o allexport; source ./src/.env; docker-compose exec -T invoice-web ./vendor/bin/phpstan analyse --memory-limit=4g
 	set -o allexport; source ./src/.env; docker-compose exec -T invoice-web sh -c './vendor/bin/pint --test'
+	set -o allexport; source ./src/.env; docker-compose exec -T invoice-web sh -c './vendor/bin/rector process app/ --dry-run'
 
 test: ## Run all tests
 	docker-compose exec -T invoice-web sh -c 'php artisan --env=local config:clear'
