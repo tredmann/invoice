@@ -33,8 +33,8 @@ fresh: ## Re-create the database and seed development data
 tinker: ## Launch artisan tinker
 	set -o allexport; source ./src/.env; docker-compose exec invoice-web php artisan tinker
 
-rebuild: stop ## Builds the docker image and does not use any caches.
-	DOCKER_BUILDKIT=1 docker build --no-cache --ssh default -t customer-app_web -f docker/web/Dockerfile .
+rebuild: stop ## Rebuilds the web image without cache
+	set -o allexport; source ./src/.env; docker-compose build --no-cache invoice-web
 
 fix:
 	set -o allexport; source ./src/.env; docker-compose exec -T invoice-web sh -c './vendor/bin/pint ./app/'

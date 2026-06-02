@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Working environment
 
-The Laravel application lives in `src/` — treat `src/` as the Laravel project root. The repository root holds `docker-compose.yml`, the `Makefile`, and developer tooling. Local development runs in Docker; the web container is `invoice-web` and the DB container is `invoice-mysql`.
+The Laravel application lives in `src/` — treat `src/` as the Laravel project root. The repository root holds `docker-compose.yml`, the `Makefile`, and developer tooling.
+
+Local development runs in Docker. The web container `invoice-web` is built from `docker/web/Dockerfile` on top of `serversideup/php:8.5-frankenphp`, with Xdebug, Node 22, and `chokidar` baked in. It runs three processes via `docker/web/dev-entrypoint.sh`:
+
+1. **Laravel Octane** (FrankenPHP driver) serving HTTP on port `8080` (exposed as `localhost:8090`), with `--watch` so PHP changes reload workers automatically.
+2. **`queue:work`** — Laravel queue worker.
+3. **`schedule:work`** — Laravel scheduler.
+
+The DB container is `invoice-mysql`. Mailpit (`invoice-mailpit`) and Adminer (`invoice-adminer`) round out the stack.
 
 ## Common commands
 
@@ -12,6 +20,7 @@ All commands run from the repository root unless noted. They source `./src/.env`
 
 - `make run` (alias `make start`) — bring the stack up (web on `:8090`, adminer `:8091`, mailpit UI on `:8125` / SMTP on `:11025`)
 - `make stop` — stop containers
+- `make rebuild` — rebuild the web image without cache (use after changes to `docker/web/`)
 - `make ssh` — shell into the web container
 - `make migrate` / `make rollback` / `make fresh` — DB migrations (`fresh` re-seeds)
 - `make tinker` — artisan tinker
@@ -20,13 +29,15 @@ All commands run from the repository root unless noted. They source `./src/.env`
 - `make fix` — run Pint to auto-format `app/`
 - `make clearall` — clear cache/route/config/view caches
 
+Octane keeps the framework in memory between requests, so after editing things that bypass the `--watch` list (e.g. published vendor files, anything outside `app/`, `bootstrap/`, `config/`, `database/`, `routes/`, `public/**/*.php`, `resources/**/*.php`, `composer.lock`, `.env`) run `make ssh` and then `php artisan octane:reload` — or just `docker-compose restart invoice-web`.
+
 Run a single test (from inside the container via `make ssh`):
 ```
 ./vendor/bin/phpunit --filter TestClassOrMethodName
 ./vendor/bin/phpunit tests/Feature/Some/Path/SomethingTest.php
 ```
 
-Frontend assets (Vite, run inside `src/`): `npm run dev` (dev server with HMR on `:5173`), `npm run build` (production build to `public/build/`).
+Frontend assets (Vite, run on the **host** from `src/`, not inside the container): `npm run dev` (dev server with HMR on `:5173`), `npm run build` (production build to `public/build/`). Node is not installed in the web container by design — only `chokidar` is, for Octane's `--watch`.
 
 ## Ubiquitous language (read `CONTEXT.md`)
 
@@ -43,7 +54,9 @@ When introducing new code, prefer the ubiquitous-language term. When touching ex
 
 ## Architecture
 
-Laravel 11 (PHP 8.3) multi-tenant invoicing app. Each **Company** (`Tenant`) owns its **Users**, **Customers**, **Invoices**, **Recurring Invoices** (`MasterInvoice`), and **Settings**. Tenant scoping is mediated by `App\Services\TenantService` and the `TracksTenant` trait — keep tenant boundaries explicit when adding queries.
+Laravel 12 (PHP 8.5) multi-tenant invoicing app, served in dev via Laravel Octane on FrankenPHP (`OCTANE_SERVER=frankenphp`). Each **Company** (`Tenant`) owns its **Users**, **Customers**, **Invoices**, **Recurring Invoices** (`MasterInvoice`), and **Settings**. Tenant scoping is mediated by `App\Services\TenantService` and the `TracksTenant` trait — keep tenant boundaries explicit when adding queries.
+
+**Octane caveat:** because workers are long-lived, code must not rely on per-request global state. Avoid static caches, request-bound singletons that leak between requests, and `env()` calls outside config (which Octane's [docs flag](https://laravel.com/docs/12.x/octane#dependency-injection-and-octane) as common footguns). Stick to constructor injection and the container's request-scoped bindings.
 
 HTTP middleware, exception handling, and console scheduling are wired in `bootstrap/app.php`. Scheduled tasks live in `routes/console.php`.
 

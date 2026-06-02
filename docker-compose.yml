@@ -1,8 +1,7 @@
-version: '3'
 volumes:
   db-data:
-    external:
-      name: invoice-mysql-db-share
+    name: invoice-mysql-db-share
+    external: true
 services:
   invoice-mysql:
     container_name: invoice-mysql
@@ -26,21 +25,25 @@ services:
       --collation-server=utf8mb4_unicode_ci "
   invoice-web:
     container_name: invoice-web
-    image: "balttech/laravel-development-image:latest"
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
     ports:
       - '8090:8080'
-      - '5173:5173'
     restart: on-failure
     depends_on:
       - invoice-mysql
     links:
       - invoice-mysql
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     volumes:
-      - './src:/var/www/html/'
+      - './src:/var/www/html'
       - './config/phpcs:/var/temp/'
     environment:
       APP_ENV: local
       XDEBUG_SESSION: 1
+      HEALTHCHECK_PATH: /
   invoice-adminer:
     container_name: invoice-adminer
     image: 'adminer:latest'

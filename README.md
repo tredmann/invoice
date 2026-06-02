@@ -1,6 +1,6 @@
 # Invoice
 
-A self-hosted, multi-tenant invoicing application built with Laravel 11.
+A self-hosted, multi-tenant invoicing application built with Laravel 12 (PHP 8.5), served via Laravel Octane on FrankenPHP.
 
 Free for self-hosting. Offering this software as a hosted/managed service to third parties requires a commercial license — see [License](#license) below.
 
@@ -47,7 +47,16 @@ Demo login credentials are printed by the seeder.
 
 ## Architecture
 
-The Laravel application lives in `src/`. The repository root holds Docker compose, the Makefile, and developer tooling.
+The Laravel application lives in `src/`. The repository root holds the Docker compose file, the Makefile, and developer tooling.
+
+The dev stack runs in Docker:
+
+- **`invoice-web`** — built from `docker/web/Dockerfile` on top of `serversideup/php:8.5-frankenphp`. A single entrypoint script (`docker/web/dev-entrypoint.sh`) runs Laravel Octane (FrankenPHP driver, with `--watch` for hot reloads), the queue worker, and the scheduler in the same container.
+- **`invoice-mysql`** — MySQL 8.
+- **`invoice-mailpit`** — captures outgoing mail (UI on `:8125`, SMTP on `:11025`).
+- **`invoice-adminer`** — DB UI on `:8091`.
+
+Frontend assets are served by **Vite** running on the host (`cd src && npm run dev`) — Node is not installed in the web container.
 
 Two documents describe the codebase in depth:
 

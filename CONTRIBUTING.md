@@ -8,13 +8,14 @@ This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participatin
 
 ## Local Setup
 
-**Prerequisites:** Docker, Docker Compose, Make
+**Prerequisites:** Docker, Docker Compose, Make. Optional but recommended for working on frontend assets: Node 22+ (to run Vite on the host).
 
 1. Fork and clone the repository
 2. Copy `src/.env.example` to `src/.env`
-3. Run `make run`
+3. Run `make run` — this builds the FrankenPHP-based web image and brings the stack up. The web container runs Laravel Octane, the queue worker, and the scheduler together; PHP changes hot-reload via Octane's `--watch`.
 4. In a new terminal, run `make fresh` to migrate and seed demo data
-5. Open http://localhost:8090
+5. (Optional) For frontend work, run `cd src && npm install && npm run dev` on the host to start Vite (HMR on `:5173`). Node is intentionally not installed in the web container.
+6. Open http://localhost:8090
 
 Useful commands (all run from the repo root):
 
@@ -22,6 +23,7 @@ Useful commands (all run from the repo root):
 | --- | --- |
 | `make run` / `make start` | Bring the Docker stack up |
 | `make stop` | Stop containers |
+| `make rebuild` | Rebuild the web image without cache (after `docker/web/` changes) |
 | `make ssh` | Shell into the web container |
 | `make migrate` | Run pending migrations |
 | `make fresh` | Drop, re-migrate, and re-seed the DB |
@@ -30,6 +32,13 @@ Useful commands (all run from the repo root):
 | `make quality` | Run PHPStan + Pint in check mode |
 | `make fix` | Auto-format with Pint |
 | `make clearall` | Clear cache, route, config, and view caches |
+
+### Octane gotchas
+
+Because Octane keeps the framework booted in memory, a couple of things differ from a vanilla PHP-FPM setup:
+
+- **Reloads.** Files listed in `config/octane.php` under `watch` (e.g. `app/`, `routes/`, `config/`) reload automatically. For anything else, run `php artisan octane:reload` from `make ssh`, or `docker-compose restart invoice-web`.
+- **Request-scoped state.** Avoid static caches, request-bound singletons, and `env()` calls outside `config/*` — these are common Octane footguns. See the [Octane docs](https://laravel.com/docs/12.x/octane#dependency-injection-and-octane).
 
 ## Running a Single Test
 
