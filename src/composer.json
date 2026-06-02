@@ -22,13 +22,14 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/oauth2-client": "^2.7",
         "livewire/livewire": "^4.0",
-        "maatwebsite/excel": "^3.1.69",
+        "maatwebsite/excel": "^4.0",
         "spatie/laravel-backup": "^10.0",
         "tucker-eric/eloquentfilter": "^3.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.0",
         "barryvdh/laravel-ide-helper": "^3.0",
+        "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.21",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.13",
@@ -36,6 +37,7 @@
         "nunomaduro/collision": "^8.0",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^12.0",
+        "rector/rector": "^2.0",
         "slevomat/coding-standard": "^8.0",
         "spatie/laravel-ignition": "^2.4",
         "squizlabs/php_codesniffer": "^3.7"
@@ -65,6 +67,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "App\\Rector\\Rules\\": "rector/rules/",
             "Tests\\": "tests/"
         }
     },
@@ -89,6 +92,9 @@
         ],
         "phpunit": [
             "./vendor/bin/phpunit"
+        ],
+        "rector": [
+            "./vendor/bin/rector process app/"
         ]
     }
 }
