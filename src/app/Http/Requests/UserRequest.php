@@ -14,11 +14,9 @@ class UserRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @return bool|\Illuminate\Auth\Access\Response
-     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -28,6 +26,7 @@ class UserRequest extends FormRequest
      *
      * @return void
      */
+    #[\Override]
     protected function prepareForValidation()
     {
         if ($this->password === null) {
@@ -37,10 +36,8 @@ class UserRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],

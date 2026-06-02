@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
-    /**
-     * @var CustomerService
-     */
-    private $customerService;
+    private readonly \App\Services\Customers\CustomerService $customerService;
 
     public function __construct()
     {
@@ -36,10 +33,8 @@ class CustomerController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return CustomerResource|\Illuminate\Http\JsonResponse
      */
-    public function store(CustomerRequest $request, Tenant $tenant)
+    public function store(CustomerRequest $request, Tenant $tenant): \App\Http\Resources\V1\CustomerResource
     {
         $customer = $this->customerService->store($request->validated(), $tenant);
 
@@ -48,20 +43,16 @@ class CustomerController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return CustomerResource
      */
-    public function show(Tenant $tenant, Customer $customer)
+    public function show(Tenant $tenant, Customer $customer): \App\Http\Resources\V1\CustomerResource
     {
         return new CustomerResource($customer);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return CustomerResource|\Illuminate\Http\JsonResponse
      */
-    public function update(CustomerRequest $request, Tenant $tenant, Customer $customer)
+    public function update(CustomerRequest $request, Tenant $tenant, Customer $customer): \App\Http\Resources\V1\CustomerResource
     {
         $customer->update($request->validated());
 
@@ -71,11 +62,9 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     *
      * @throws \Exception
      */
-    public function destroy(Tenant $tenant, Customer $customer)
+    public function destroy(Tenant $tenant, Customer $customer): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $customer->delete();
 

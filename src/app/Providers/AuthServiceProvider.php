@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\Invoice;
@@ -18,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array<class-string, class-string>
      */
+    #[\Override]
     protected $policies = [
         User::class => UserPolicy::class,
         Tenant::class => TenantPolicy::class,
@@ -25,14 +28,12 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Register any authentication / authorization services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
 
-        Gate::define('stop-post-open-invoice-action', function ($user, Invoice $invoice) {
+        Gate::define('stop-post-open-invoice-action', function ($user, Invoice $invoice): true {
             if ($invoice->status !== Invoice::STATUS_DRAFT) {
                 throw new AuthorizationException('Diese Rechnung ist kein Entwurf mehr.');
             }

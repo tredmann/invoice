@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
@@ -25,6 +27,7 @@ class RouteServiceProvider extends ServiceProvider
      * since the Laravel 11 skeleton migration; this provider now only owns
      * the HOME constant and rate-limiter configuration.
      */
+    #[\Override]
     public function boot(): void
     {
         $this->configureRateLimiting();
@@ -35,8 +38,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting(): void
     {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60);
-        });
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60));
     }
 }

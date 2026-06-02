@@ -95,7 +95,7 @@ class AuthController extends Controller
         return response()->json($success, 201);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $token = PersonalAccessToken::where('id', '=', $request->bearerToken())->first();
         $token->delete();

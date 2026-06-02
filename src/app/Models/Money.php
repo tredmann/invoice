@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-class Money
+class Money implements \Stringable
 {
     public const CURRENCY_EUR = 'EUR';
 
@@ -12,34 +14,31 @@ class Money
 
     public const DE_TAX_RATES = [0.19, 0.07];
 
-    private null|string $currency;
+    private readonly float $money;
 
-    private float $money;
-
-    public function __construct(float $money, ?string $currency = null)
+    public function __construct(float $money, private readonly null|string $currency = null)
     {
         $this->money = $money / 100;
-        $this->currency = $currency;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->currency ? $this->currencyFormat() : (string) $this->money;
+        return (string) (string) $this->currency !== '' && (string) $this->currency !== '0' ? $this->currencyFormat() : (string) $this->money;
     }
 
-    private function currencyFormat()
+    private function currencyFormat(): ?string
     {
         switch ($this->currency) {
             case self::CURRENCY_EUR:
                 $x = number_format($this->money, 2, ',', '.');
-                $x .= ' &euro;';
 
-                return $x;
+                return $x . ' &euro;';
 
             case self::CURRENCY_US_DOLLAR:
                 $x = number_format($this->money, 2, '.', ',');
 
                 return '$' . $x;
         }
+        return null;
     }
 }

@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
-    public function dashboard(Tenant $tenant)
+    public function dashboard(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('dashboard.dashboard', [
             'paidInvoices' => $tenant

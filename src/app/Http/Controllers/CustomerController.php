@@ -14,24 +14,18 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    /**
-     * @var CustomerService
-     */
-    private $customerService;
-
-    public function __construct(CustomerService $customerService)
+    public function __construct(private readonly CustomerService $customerService)
     {
-        $this->customerService = $customerService;
     }
 
-    public function index(Tenant $tenant)
+    public function index(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $customers = $tenant->customers()->orderBy('company')->paginate(500);
 
         return view('default.customers.index', ['tenant' => $tenant, 'customers' => $customers]);
     }
 
-    public function invoices(Tenant $tenant, Customer $customer)
+    public function invoices(Tenant $tenant, Customer $customer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $invoices = $customer->invoices;
 
@@ -43,7 +37,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function masterInvoices(Tenant $tenant, Customer $customer)
+    public function masterInvoices(Tenant $tenant, Customer $customer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $masterInvoices = $customer->masterInvoices;
 
@@ -57,7 +51,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function mailReceivers(Tenant $tenant, Customer $customer)
+    public function mailReceivers(Tenant $tenant, Customer $customer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.customers.mailReceivers', [
             'customer' => $customer,
@@ -66,7 +60,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function show(Tenant $tenant, Customer $customer)
+    public function show(Tenant $tenant, Customer $customer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.customers.show', [
             'customer' => $customer,
@@ -74,7 +68,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function create(Tenant $tenant)
+    public function create(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.customers.create', ['tenant' => $tenant]);
     }
@@ -93,7 +87,7 @@ class CustomerController extends Controller
         return redirect(route('customers.index', ['tenant' => $tenant]))->with('success', 'Kunden erfolgreich gelöscht');
     }
 
-    public function edit(Tenant $tenant, Customer $customer)
+    public function edit(Tenant $tenant, Customer $customer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.customers.edit', ['customer' => $customer, 'tenant' => $tenant]);
     }

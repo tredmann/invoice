@@ -10,20 +10,16 @@ class InvoiceStatusOpenRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'days_till_due' => ['required', 'in:' . implode(',', Invoice::DAYS_TILL_DUE), 'int'],
@@ -34,12 +30,11 @@ class InvoiceStatusOpenRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param  Validator  $validator
-     * @return void
+     * @param \Illuminate\Contracts\Validation\Validator $validator
      */
-    public function withValidator($validator)
+    public function withValidator($validator): void
     {
-        $validator->after(function ($validator) {
+        $validator->after(function ($validator): void {
             if ($this->hasNoLineItems()) {
                 $validator->errors()->add('lineItems', 'Die Rechnung hat keine Rechnungspositionen!');
             }

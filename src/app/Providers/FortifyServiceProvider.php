@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
@@ -13,36 +15,25 @@ class FortifyServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    #[\Override]
+    public function register(): void
     {
         //
     }
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        Fortify::registerView(function () {
-            return view('auth.register', ['title' => __('auth.titles.register')]);
-        });
+        Fortify::registerView(fn () => view('auth.register', ['title' => __('auth.titles.register')]));
 
-        Fortify::loginView(function () {
-            return view('auth.login', ['title' => __('auth.titles.login')]);
-        });
+        Fortify::loginView(fn () => view('auth.login', ['title' => __('auth.titles.login')]));
 
-        Fortify::requestPasswordResetLinkView(function () {
-            return view('auth.forgot-password', ['title' => __('auth.titles.forgot_password')]);
-        });
+        Fortify::requestPasswordResetLinkView(fn () => view('auth.forgot-password', ['title' => __('auth.titles.forgot_password')]));
 
-        Fortify::resetPasswordView(function ($request) {
-            return view('auth.reset-password', ['title' => __('auth.titles.reset_password'), 'request' => $request]);
-        });
+        Fortify::resetPasswordView(fn ($request) => view('auth.reset-password', ['title' => __('auth.titles.reset_password'), 'request' => $request]));
 
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);

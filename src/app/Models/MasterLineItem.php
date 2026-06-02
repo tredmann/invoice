@@ -40,26 +40,29 @@ class MasterLineItem extends Model
     use HasUuid;
     use TracksUser;
 
+    #[\Override]
     protected static function boot(): void
     {
         parent::boot();
 
-        static::created(static function ($model) {
+        static::created(static function (\App\Models\MasterLineItem $model): void {
             MasterInvoiceService::totalsUpdate($model->masterInvoice);
             MasterInvoiceService::setCurrencyIfNull($model->masterInvoice, $model);
         });
 
-        static::updated(static function ($model) {
+        static::updated(static function ($model): void {
             MasterInvoiceService::totalsUpdate($model->masterInvoice);
         });
 
-        static::deleted(static function ($model) {
+        static::deleted(static function ($model): void {
             MasterInvoiceService::totalsUpdate($model->masterInvoice);
         });
     }
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public function user()
@@ -77,6 +80,7 @@ class MasterLineItem extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = [
         'master_invoice_id',
         'user_id',

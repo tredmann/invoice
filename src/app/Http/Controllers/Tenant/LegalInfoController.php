@@ -8,7 +8,7 @@ use App\Models\Tenant\Tenant;
 
 class LegalInfoController
 {
-    public function index(Tenant $tenant)
+    public function index(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.legalInfos.index', [
             'legalInfo' => $tenant->currentLegalInfo,
@@ -16,7 +16,7 @@ class LegalInfoController
         ]);
     }
 
-    public function create(Tenant $tenant)
+    public function create(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.legalInfos.create', [
             'tenant' => $tenant,
@@ -37,7 +37,7 @@ class LegalInfoController
         );
     }
 
-    public function edit(Tenant $tenant, LegalInfo $legalInfo)
+    public function edit(Tenant $tenant, LegalInfo $legalInfo): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.legalInfos.edit', [
             'legalInfo' => $legalInfo,

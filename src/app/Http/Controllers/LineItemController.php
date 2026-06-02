@@ -11,17 +11,11 @@ use Illuminate\Support\Facades\Gate;
 
 class LineItemController extends Controller
 {
-    /**
-     * @var LineItemService
-     */
-    private $lineItemService;
-
-    public function __construct(LineItemService $lineItemService)
+    public function __construct(private readonly LineItemService $lineItemService)
     {
-        $this->lineItemService = $lineItemService;
     }
 
-    public function create(Tenant $tenant, Invoice $invoice)
+    public function create(Tenant $tenant, Invoice $invoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         Gate::authorize('stop-post-open-invoice-action', $invoice);
 
@@ -45,7 +39,7 @@ class LineItemController extends Controller
         }
     }
 
-    public function edit(Tenant $tenant, LineItem $lineItem)
+    public function edit(Tenant $tenant, LineItem $lineItem): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         Gate::authorize('stop-post-open-invoice-action', $lineItem->invoice);
 

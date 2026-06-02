@@ -5,21 +5,14 @@ namespace App\Jobs;
 use App\Mail\CancellationInvoiceMail;
 use App\Models\Invoice;
 use App\Services\SettingService\SettingService;
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class SendCancellationInvoiceMail implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     public function __construct(private Invoice $invoice)
     {

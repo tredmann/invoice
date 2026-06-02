@@ -15,13 +15,13 @@ class MasterInvoiceService
         return MasterInvoice::create($attributes);
     }
 
-    public function active(array $attributes, MasterInvoice $masterInvoice)
+    public function active(array $attributes, MasterInvoice $masterInvoice): void
     {
         $attributes['status'] = MasterInvoice::STATUS_ACTIVE;
         $masterInvoice->update($attributes);
     }
 
-    public function pause(MasterInvoice $masterInvoice)
+    public function pause(MasterInvoice $masterInvoice): void
     {
         $masterInvoice->update(['status' => MasterInvoice::STATUS_PAUSED]);
     }
@@ -33,7 +33,7 @@ class MasterInvoiceService
         return MasterLineItem::create($attributes);
     }
 
-    public static function totalsUpdate(MasterInvoice $masterInvoice)
+    public static function totalsUpdate(MasterInvoice $masterInvoice): void
     {
         $masterInvoice->unsetRelation('masterLineItems');
 
@@ -43,7 +43,7 @@ class MasterInvoiceService
         ]);
     }
 
-    public static function setCurrencyIfNull(MasterInvoice $masterInvoice, MasterLineItem $masterLineItem)
+    public static function setCurrencyIfNull(MasterInvoice $masterInvoice, MasterLineItem $masterLineItem): void
     {
         $masterInvoice->currency ? null : $masterInvoice->update(['currency' => $masterLineItem->currency]);
     }
@@ -60,7 +60,7 @@ class MasterInvoiceService
         return today()->modify($masterInvoice->billing_frequency);
     }
 
-    public function setNextPrint(MasterInvoice $masterInvoice)
+    public function setNextPrint(MasterInvoice $masterInvoice): void
     {
         $masterInvoice->next_print = $this->getNextPrint($masterInvoice);
         $masterInvoice->update();

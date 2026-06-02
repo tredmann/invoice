@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use App\Models\Tenant\Tenant;
@@ -9,8 +11,6 @@ class NotInTenant implements Rule
 {
     /**
      * Create a new rule instance.
-     *
-     * @return void
      */
     public function __construct()
     {

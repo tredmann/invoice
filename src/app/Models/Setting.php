@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Crypt;
  * @property string $id
  * @property string $tenant_id
  * @property string $key
- * @property string $value
+ * @property mixed $value
  * @property string $type
  */
 class Setting extends Model
@@ -24,8 +24,10 @@ class Setting extends Model
     use HasUuid;
     use HasFactory;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public const VALUE_TYPES = ['boolean', 'string', 'integer', 'float', self::VALUE_SECRET];
@@ -42,17 +44,18 @@ class Setting extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = ['tenant_id', 'key', 'value', 'type'];
 
-    public function getValueAttribute(string $value): int|bool|string|float
+    protected function value(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
-        $value = Crypt::decryptString($value);
-
-        if ($this->type !== self::VALUE_SECRET) {
-            settype($value, $this->type);
-        }
-
-        return $value;
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function (string $value) {
+            $value = Crypt::decryptString($value);
+            if ($this->type !== self::VALUE_SECRET) {
+                settype($value, $this->type);
+            }
+            return $value;
+        });
     }
 
     public static function isEnabled(Tenant $tenant, Settings $setting): bool

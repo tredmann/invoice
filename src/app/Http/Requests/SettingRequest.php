@@ -11,10 +11,8 @@ class SettingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -22,7 +20,7 @@ class SettingRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [
             'value' => 'required|string',
@@ -49,9 +47,7 @@ class SettingRequest extends FormRequest
                 'required',
                 'string',
                 Rule::unique('settings')
-                    ->where(function ($query) {
-                        return $query->where('tenant_id', app(Tenant::class)->id);
-                    })
+                    ->where(fn ($query) => $query->where('tenant_id', app(Tenant::class)->id))
                     ->ignore($id, 'id'),
             ];
         }

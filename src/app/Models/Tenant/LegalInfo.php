@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Tenant;
 
 use App\Traits\HasUuid;
@@ -24,8 +26,10 @@ class LegalInfo extends Model
     use HasFactory;
     use HasUuid;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public function tenant()
@@ -38,6 +42,7 @@ class LegalInfo extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = [
         'registry_court',
         'registry_no',

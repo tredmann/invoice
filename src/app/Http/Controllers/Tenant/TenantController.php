@@ -11,11 +11,11 @@ use Auth;
 
 class TenantController
 {
-    public function __construct(private TenantService $tenantService)
+    public function __construct(private readonly TenantService $tenantService)
     {
     }
 
-    public function index()
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.tenants.index', [
             'tenants' => Auth::user()
@@ -24,7 +24,7 @@ class TenantController
         ]);
     }
 
-    public function create()
+    public function create(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.tenants.create');
     }
@@ -36,19 +36,19 @@ class TenantController
         return redirect(route('tenants.users', ['tenant' => $tenant]))->with('success', 'Tenant erfolgreich gespeichert!');
     }
 
-    public function edit(Tenant $tenant)
+    public function edit(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.tenants.edit', [
             'tenant' => $tenant,
         ]);
     }
 
-    public function show(Tenant $tenant)
+    public function show(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.tenants.show', ['tenant' => $tenant]);
     }
 
-    public function users(Tenant $tenant)
+    public function users(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.tenants.users', [
             'tenantUsers' => $tenant
@@ -58,7 +58,7 @@ class TenantController
         ]);
     }
 
-    public function inviteUserForm(Tenant $tenant)
+    public function inviteUserForm(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.tenants.inviteUser', [
             'tenant' => $tenant,

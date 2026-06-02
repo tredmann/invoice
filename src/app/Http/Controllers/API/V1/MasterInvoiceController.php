@@ -9,16 +9,12 @@ use App\Http\Resources\V1\MasterInvoiceResource;
 use App\Models\MasterInvoice;
 use App\Models\Tenant\Tenant;
 use App\Services\MasterInvoices\MasterInvoiceService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class MasterInvoiceController extends Controller
 {
-    /**
-     * @var MasterInvoiceService
-     */
-    private $masterInvoiceService;
+    private readonly \App\Services\MasterInvoices\MasterInvoiceService $masterInvoiceService;
 
     public function __construct()
     {
@@ -37,24 +33,22 @@ class MasterInvoiceController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return MasterInvoiceResource|JsonResponse
      */
-    public function store(MasterInvoiceStoreRequest $request, Tenant $tenant)
+    public function store(MasterInvoiceStoreRequest $request, Tenant $tenant): \App\Http\Resources\V1\MasterInvoiceResource
     {
         $masterInvoice = $this->masterInvoiceService->store($request->validated());
 
         return $this->show($tenant, $masterInvoice);
     }
 
-    public function active(MasterInvoiceActiveRequest $request, Tenant $tenant, MasterInvoice $masterInvoice)
+    public function active(MasterInvoiceActiveRequest $request, Tenant $tenant, MasterInvoice $masterInvoice): \App\Http\Resources\V1\MasterInvoiceResource
     {
         $this->masterInvoiceService->active($request->validated(), $masterInvoice);
 
         return $this->show($tenant, $masterInvoice);
     }
 
-    public function pause(Tenant $tenant, MasterInvoice $masterInvoice)
+    public function pause(Tenant $tenant, MasterInvoice $masterInvoice): \App\Http\Resources\V1\MasterInvoiceResource
     {
         $this->masterInvoiceService->pause($masterInvoice);
 
@@ -63,20 +57,16 @@ class MasterInvoiceController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return MasterInvoiceResource
      */
-    public function show(Tenant $tenant, MasterInvoice $masterInvoice)
+    public function show(Tenant $tenant, MasterInvoice $masterInvoice): \App\Http\Resources\V1\MasterInvoiceResource
     {
         return new MasterInvoiceResource($masterInvoice);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function destroy(Tenant $tenant, MasterInvoice $masterInvoice)
+    public function destroy(Tenant $tenant, MasterInvoice $masterInvoice): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $masterInvoice->delete();
 

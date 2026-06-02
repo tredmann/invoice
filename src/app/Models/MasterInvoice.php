@@ -41,8 +41,10 @@ class MasterInvoice extends Model
     use HasUuid;
     use TracksUser;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public const STATUS_DRAFT = 'draft';
@@ -71,23 +73,17 @@ class MasterInvoice extends Model
 
     public const BILLING_HALF_YEAR = '6 months';
 
-    public function buildPerformedWhen()
+    public function buildPerformedWhen(): string
     {
         $this->next_print = Carbon::parse($this->next_print);
-        switch ($this->billing_frequency) {
-            case self::BILLING_DAY:
-                return $this->next_print->isoFormat('dddd, MMMM YYYY');
-            case self::BILLING_WEEK:
-                return 'KW ' . $this->next_print->isoFormat('w YYYY');
-            case self::BILLING_MONTH:
-                return $this->next_print->isoFormat('MMMM YYYY');
-            case self::BILLING_QUARTER_YEAR:
-                return $this->next_print->subMonths(3)->isoFormat('MMMM YYYY') . ' - ' . now()->isoFormat('MMMM YYYY');
-            case self::BILLING_HALF_YEAR:
-                return $this->next_print->subMonths(6)->isoFormat('MMMM YYYY') . ' - ' . now()->isoFormat('MMMM YYYY');
-            default:
-                return 'Falsches Leistungsdatum';
-        }
+        return match ($this->billing_frequency) {
+            self::BILLING_DAY => $this->next_print->isoFormat('dddd, MMMM YYYY'),
+            self::BILLING_WEEK => 'KW ' . $this->next_print->isoFormat('w YYYY'),
+            self::BILLING_MONTH => $this->next_print->isoFormat('MMMM YYYY'),
+            self::BILLING_QUARTER_YEAR => $this->next_print->subMonths(3)->isoFormat('MMMM YYYY') . ' - ' . now()->isoFormat('MMMM YYYY'),
+            self::BILLING_HALF_YEAR => $this->next_print->subMonths(6)->isoFormat('MMMM YYYY') . ' - ' . now()->isoFormat('MMMM YYYY'),
+            default => 'Falsches Leistungsdatum',
+        };
     }
 
     public function user()
@@ -110,6 +106,7 @@ class MasterInvoice extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = [
         'customer_id',
         'user_id',
@@ -125,6 +122,7 @@ class MasterInvoice extends Model
     /**
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [

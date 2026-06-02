@@ -11,10 +11,7 @@ use App\Services\MasterLineItems\MasterLineItemService;
 
 class MasterLineItemController extends Controller
 {
-    /**
-     * @var MasterLineItemService
-     */
-    private $masterLineItemService;
+    private readonly \App\Services\MasterLineItems\MasterLineItemService $masterLineItemService;
 
     public function __construct()
     {
@@ -23,10 +20,8 @@ class MasterLineItemController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return MasterLineItemResource|\Illuminate\Http\JsonResponse
      */
-    public function store(MasterLineItemRequest $request, Tenant $tenant)
+    public function store(MasterLineItemRequest $request, Tenant $tenant): \App\Http\Resources\V1\MasterLineItemResource
     {
         $masterLineItem = $this->masterLineItemService->store($request->validated());
 
@@ -35,20 +30,16 @@ class MasterLineItemController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return MasterLineItemResource
      */
-    public function show(Tenant $tenant, MasterLineItem $masterLineItem)
+    public function show(Tenant $tenant, MasterLineItem $masterLineItem): \App\Http\Resources\V1\MasterLineItemResource
     {
         return new MasterLineItemResource($masterLineItem);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return MasterLineItemResource|\Illuminate\Http\JsonResponse
      */
-    public function update(MasterLineItemRequest $request, Tenant $tenant, MasterLineItem $masterLineItem)
+    public function update(MasterLineItemRequest $request, Tenant $tenant, MasterLineItem $masterLineItem): \App\Http\Resources\V1\MasterLineItemResource
     {
         $masterLineItem->update($request->validated());
 
@@ -58,11 +49,9 @@ class MasterLineItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     *
      * @throws \Exception
      */
-    public function destroy(Tenant $tenant, MasterLineItem $masterLineItem)
+    public function destroy(Tenant $tenant, MasterLineItem $masterLineItem): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $masterLineItem->delete();
 

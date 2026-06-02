@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use App\Models\Invoice;
@@ -9,22 +11,15 @@ use Illuminate\Contracts\Validation\Rule;
 class CurrencySet implements Rule
 {
     /**
-     * @var Invoice | MasterInvoice
-     */
-    private $invoice;
-
-    /**
-     * @var string
-     */
-    private $currency;
-
-    /**
      * Create a new rule instance.
      */
-    public function __construct(object $invoice, string $currency)
-    {
-        $this->invoice = $invoice;
-        $this->currency = $currency;
+    public function __construct(
+        /**
+         * @var Invoice | MasterInvoice
+         */
+        private readonly object $invoice,
+        private readonly string $currency
+    ) {
     }
 
     /**

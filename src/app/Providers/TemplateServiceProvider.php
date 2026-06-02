@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Modules\InvoiceTemplates\Models\TemplateManager;
@@ -10,10 +12,10 @@ use Illuminate\Support\ServiceProvider;
 
 class TemplateServiceProvider extends ServiceProvider
 {
-    /** @return void */
-    public function register()
+    #[\Override]
+    public function register(): void
     {
-        $this->app->singleton(TemplateManager::class, function (Application $app) {
+        $this->app->singleton(TemplateManager::class, function (Application $app): \App\Modules\InvoiceTemplates\Models\TemplateManager {
             $templateManager = new TemplateManager();
 
             // Normal Invoice PDF

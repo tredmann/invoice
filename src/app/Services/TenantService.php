@@ -22,14 +22,14 @@ class TenantService
         return $tenant;
     }
 
-    public function update(array $input, Tenant $tenant)
+    public function update(array $input, Tenant $tenant): void
     {
         $input['slug'] = Str::slug($input['name']);
 
         $tenant->update($input);
     }
 
-    public function addUser(array $input, Tenant $tenant)
+    public function addUser(array $input, Tenant $tenant): void
     {
         $user = User::where('email', $input['email'])->first();
 

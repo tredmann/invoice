@@ -8,14 +8,14 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class CustomerImport implements ToModel
 {
-    public function __construct(private Tenant $tenant)
+    public function __construct(private readonly Tenant $tenant)
     {
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function model(array $row)
+    public function model(array $row): \Illuminate\Database\Eloquent\Model|array|null
     {
         // check if the row is empty, and if it is empty, return "", otherwise return the " " (space)
         $spaceCompany = $row[6] !== null ? ' ' : '';

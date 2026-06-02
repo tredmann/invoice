@@ -15,15 +15,11 @@ class ConvertRequestFieldsToSnakeCase
      */
     public function handle(Request $request, Closure $next)
     {
-        $snakeJson = static function (array $array) use (&$snakeJson) {
+        $snakeJson = static function (array $array) use (&$snakeJson): array {
             $replaced = [];
             foreach ($array as $key => $value) {
                 $key = Str::snake($key);
-                if (is_array($value)) {
-                    $replaced[$key] = $snakeJson($value);
-                } else {
-                    $replaced[$key] = $value;
-                }
+                $replaced[$key] = is_array($value) ? $snakeJson($value) : $value;
             }
 
             return $replaced;

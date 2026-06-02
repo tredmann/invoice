@@ -13,19 +13,12 @@ class OpenInvoiceAction
 {
     public MessageBag $messages;
 
-    private Invoice $invoice;
-
-    private InvoiceStatusOpenRequest $request;
-
-    public function __construct(Invoice $invoice, InvoiceStatusOpenRequest $request)
+    public function __construct(private readonly Invoice $invoice, private readonly InvoiceStatusOpenRequest $request)
     {
-        $this->invoice = $invoice;
-        $this->request = $request;
-
         $this->execute();
     }
 
-    public function execute()
+    public function execute(): void
     {
         $this->messages = new MessageBag();
 
@@ -45,12 +38,12 @@ class OpenInvoiceAction
         }
     }
 
-    public function fails()
+    public function fails(): bool
     {
         return count($this->messages) > 0;
     }
 
-    public function rules()
+    public function rules(): void
     {
         $this->hasLegalInfo();
         $this->hasGeneralInfo();

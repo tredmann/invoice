@@ -27,7 +27,7 @@ class CustomerService
         return $customer;
     }
 
-    public function toArray($customer)
+    public function toArray($customer): array
     {
         return [
             'id' => $customer->id,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Models\Tenant\Tenant;
@@ -47,8 +49,10 @@ class Customer extends Model
     use TracksTenant;
     use HasUniqueNumber;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public function user()
@@ -81,11 +85,13 @@ class Customer extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = ['customer_no', 'tenant_id', 'user_id', 'company', 'name', 'street', 'postal', 'city'];
 
     /**
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [

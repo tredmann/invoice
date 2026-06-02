@@ -6,14 +6,12 @@ class LineItemProcessorService
 {
     public static function processLineItemData(array $attributes): array
     {
-        $attributes = array_merge($attributes, [
+        return array_merge($attributes, [
             'quantity' => $quantity = (float) $attributes['quantity'],
             'price_each' => $priceEach = (int) ($attributes['price_each'] * 100), // the request from the api is always float
             'without_tax' => $withoutTax = self::calcWithoutTax($priceEach, $quantity),
             'with_tax' => $withTax = self::calcWithTax($withoutTax, $attributes['tax_rate']),
         ]);
-
-        return $attributes;
     }
 
     public static function calcWithoutTax(int $priceEach, float $quantity): int

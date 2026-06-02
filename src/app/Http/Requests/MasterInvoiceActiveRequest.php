@@ -31,6 +31,7 @@ class MasterInvoiceActiveRequest extends FormRequest
     /**
      * Get the error messages for the defined validation rules.
      */
+    #[\Override]
     public function messages(): array
     {
         return [
@@ -41,11 +42,11 @@ class MasterInvoiceActiveRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param  Validator  $validator
+     * @param \Illuminate\Contracts\Validation\Validator $validator
      */
     public function withValidator($validator): void
     {
-        $validator->after(function ($validator) {
+        $validator->after(function ($validator): void {
             if ($this->hasNoLineItems()) {
                 $validator->errors()->add('masterLineItems', 'Die Abo-Rechnung hat keine Rechnungspositionen!');
             }

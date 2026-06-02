@@ -9,16 +9,12 @@ use App\Models\Invoice;
 use App\Models\LineItem;
 use App\Models\Tenant\Tenant;
 use App\Services\LineItems\LineItemService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class LineItemController extends Controller
 {
-    /**
-     * @var LineItemService
-     */
-    private $lineItemService;
+    private readonly \App\Services\LineItems\LineItemService $lineItemService;
 
     public function __construct()
     {
@@ -39,10 +35,8 @@ class LineItemController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return LineItemResource
      */
-    public function store(LineItemRequest $request, Tenant $tenant, Invoice $invoice)
+    public function store(LineItemRequest $request, Tenant $tenant, Invoice $invoice): \App\Http\Resources\V1\LineItemResource
     {
         $lineItem = $this->lineItemService->store($request->validated(), $invoice);
 
@@ -51,20 +45,16 @@ class LineItemController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return LineItemResource
      */
-    public function show(Tenant $tenant, LineItem $lineItem)
+    public function show(Tenant $tenant, LineItem $lineItem): \App\Http\Resources\V1\LineItemResource
     {
         return new LineItemResource($lineItem);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return LineItemResource|JsonResponse
      */
-    public function update(LineItemRequest $request, Tenant $tenant, LineItem $lineItem)
+    public function update(LineItemRequest $request, Tenant $tenant, LineItem $lineItem): \App\Http\Resources\V1\LineItemResource
     {
         $lineItem->update($request->validated());
 
@@ -74,11 +64,9 @@ class LineItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     *
      * @throws \Exception
      */
-    public function destroy(Tenant $tenant, LineItem $lineItem)
+    public function destroy(Tenant $tenant, LineItem $lineItem): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $lineItem->delete();
 

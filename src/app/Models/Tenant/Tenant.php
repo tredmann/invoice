@@ -39,8 +39,10 @@ class Tenant extends Model
     use HasFactory;
     use HasUuid;
 
+    #[\Override]
     public $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     /**
@@ -48,6 +50,7 @@ class Tenant extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = ['name', 'slug', 'owner_id', 'legal_info_id', 'general_info_id'];
 
     public function owner(): BelongsTo
@@ -117,8 +120,6 @@ class Tenant extends Model
 
     /**
      * Return the tenant key for this tenant. Currently it is the same as the slug.
-     *
-     * @return string
      */
     public function getTenantKey(): string
     {

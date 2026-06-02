@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController
 {
-    public function index()
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('admin.user-panel.index', [
             'users' => User::orderBy('name')->paginate(15),
@@ -28,7 +28,7 @@ class UserController
         return redirect(route('admin.user-panel.index'))->with('success', 'Erfolgreich Nutzer erstellt!');
     }
 
-    public function create()
+    public function create(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('admin.user-panel.create');
     }
@@ -83,7 +83,7 @@ class UserController
         return redirect(route('admin.user-panel.index'))->with('error', 'Dieser Nutzer ist bereits Admin!');
     }
 
-    public function edit(User $user)
+    public function edit(User $user): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('admin.user-panel.edit', [
             'user' => $user,

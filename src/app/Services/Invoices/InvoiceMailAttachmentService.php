@@ -11,10 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class InvoiceMailAttachmentService
 {
-    /**
-     * @return string
-     */
-    public function generateAttachmentPath(InvoiceInterface $invoice, string $attachment)
+    public function generateAttachmentPath(InvoiceInterface $invoice, string $attachment): string
     {
         $year = $invoice->getInvoiceDate()->format('Y');
         $month = $invoice->getInvoiceDate()->format('m');
@@ -44,7 +41,7 @@ class InvoiceMailAttachmentService
     public function saveInvoiceDocument(UploadedFile $attachment, Invoice $invoice): void
     {
         $previousAttachment = $invoice->getAttachment();
-        if ($previousAttachment) {
+        if ($previousAttachment instanceof \App\Models\InvoiceDocument) {
             $this->deleteInvoiceDocument($previousAttachment);
         }
 

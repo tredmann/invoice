@@ -26,12 +26,16 @@ class UniqueNumber extends Model
 {
     use HasUuid;
 
+    #[\Override]
     public $incrementing = false;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     protected $fillable = ['prefix', 'current', 'digits', 'year'];
 
+    #[\Override]
     protected $attributes = [
         'current' => self::DEFAULT_VALUE,
     ];
@@ -51,19 +55,13 @@ class UniqueNumber extends Model
         $currentNumber = (string) (($number->current ?? config('unique-numbers.'.$model::class.'.value', self::DEFAULT_VALUE)) + 1);
 
         $zeroFilledNumber = str_pad($currentNumber, self::DEFAULT_DIGITS, '0', STR_PAD_LEFT);
-
-        switch ($format) {
-            case 1:
-                return $zeroFilledNumber;
-            case 2:
-                return $year . '-' . $zeroFilledNumber;
-            case 3:
-                return $prefix . $year . '-' . $zeroFilledNumber;
-            case 4:
-                return $zeroFilledNumber. '-'.$year;
-        }
-
-        return null;
+        return match ($format) {
+            1 => $zeroFilledNumber,
+            2 => $year . '-' . $zeroFilledNumber,
+            3 => $prefix . $year . '-' . $zeroFilledNumber,
+            4 => $zeroFilledNumber. '-'.$year,
+            default => null,
+        };
     }
 
     public static function generatePrefixByModel(object $model): string
@@ -95,19 +93,13 @@ class UniqueNumber extends Model
 
         $currentNumber = (string) $number->current;
         $zeroFilledNumber = str_pad($currentNumber, self::DEFAULT_DIGITS, '0', STR_PAD_LEFT);
-
-        switch ($format) {
-            case 1:
-                return $zeroFilledNumber;
-            case 2:
-                return $year . '-' . $zeroFilledNumber;
-            case 3:
-                return $prefix . $year . '-' . $zeroFilledNumber;
-            case 4:
-                return $zeroFilledNumber. '-'.$year;
-        }
-
-        return null;
+        return match ($format) {
+            1 => $zeroFilledNumber,
+            2 => $year . '-' . $zeroFilledNumber,
+            3 => $prefix . $year . '-' . $zeroFilledNumber,
+            4 => $zeroFilledNumber. '-'.$year,
+            default => null,
+        };
     }
 
     public static function initNumber(

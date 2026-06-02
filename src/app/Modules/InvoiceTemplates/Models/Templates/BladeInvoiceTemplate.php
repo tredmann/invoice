@@ -14,8 +14,8 @@ class BladeInvoiceTemplate implements Template
      * @param string $view The string of the view which can be loaded by blade
      */
     public function __construct(
-        private string $tenant,
-        private string $view,
+        private readonly string $tenant,
+        private readonly string $view,
     ) {
     }
 
@@ -37,9 +37,6 @@ class BladeInvoiceTemplate implements Template
 
     /**
      * Prepares the data based on the invoice to inject into the template
-     *
-     * @param Invoice $invoice
-     * @return array
      */
     private function prepareDataForView(Invoice $invoice): array
     {

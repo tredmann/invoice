@@ -84,7 +84,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Tenant::class)->withTimestamps();
     }
 
-    public function getInitials()
+    public function getInitials(): string
     {
         return substr($this->name, 0, 2);
     }
@@ -94,6 +94,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = ['name', 'email', 'password'];
 
     /**
@@ -101,6 +102,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    #[\Override]
     protected $hidden = ['password', 'remember_token', 'two_factor_recovery_codes', 'two_factor_secret'];
 
     /**
@@ -108,6 +110,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -121,5 +124,6 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    #[\Override]
     protected $appends = ['profile_photo_url'];
 }

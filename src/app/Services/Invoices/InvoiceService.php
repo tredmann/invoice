@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Response;
 
 class InvoiceService
 {
-    public function __construct(private TemplateManager $templateManager)
+    public function __construct(private readonly TemplateManager $templateManager)
     {
     }
 
@@ -55,7 +55,7 @@ class InvoiceService
         ]);
     }
 
-    public function pdf(Invoice $invoice)
+    public function pdf(Invoice $invoice): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $tenantKey = $invoice->customer->tenant->getTenantKey();
 
@@ -127,7 +127,7 @@ class InvoiceService
             ->update(['status' => Invoice::STATUS_OVERDUE]);
     }
 
-    public static function totalsUpdate(Invoice $invoice)
+    public static function totalsUpdate(Invoice $invoice): void
     {
         $invoice->unsetRelation('lineItems');
 
@@ -137,12 +137,15 @@ class InvoiceService
         ]);
     }
 
-    public static function setCurrencyIfNull(Invoice $invoice, LineItem $lineItem)
+    public static function setCurrencyIfNull(Invoice $invoice, LineItem $lineItem): void
     {
         $invoice->currency ? null : $invoice->update(['currency' => $lineItem->currency]);
     }
 
-    public static function totalPerTax(Collection $lineItems)
+    /**
+     * @return array{percentage: mixed, base: mixed, value: (float | int)}[]
+     */
+    public static function totalPerTax(Collection $lineItems): array
     {
         $perTax = [];
         foreach ($lineItems->unique('tax_rate')->pluck('tax_rate') as $tax_rate) {
@@ -157,7 +160,7 @@ class InvoiceService
         return $perTax;
     }
 
-    public function cancel(Invoice $originalInvoice)
+    public function cancel(Invoice $originalInvoice): void
     {
         $invoiceReplica = $originalInvoice->replicate();
 

@@ -12,12 +12,7 @@ class TemplateManager
     /** @var string The default tenant key for a template */
     public const DEFAULT_TENANT = 'default';
 
-    private array $templates;
-
-    public function __construct()
-    {
-        $this->templates = [];
-    }
+    private array $templates = [];
 
     /**
      * You can add a template with a key to access it later via the template manager

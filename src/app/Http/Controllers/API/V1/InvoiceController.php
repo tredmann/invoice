@@ -11,12 +11,11 @@ use App\Models\Invoice;
 use App\Models\Tenant\Tenant;
 use App\Services\Invoices\InvoiceService;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
-    public function __construct(private InvoiceService $invoiceService)
+    public function __construct(private readonly InvoiceService $invoiceService)
     {
     }
 
@@ -32,24 +31,22 @@ class InvoiceController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return InvoiceResource|JsonResponse
      */
-    public function store(InvoiceStoreRequest $request, Tenant $tenant)
+    public function store(InvoiceStoreRequest $request, Tenant $tenant): \App\Http\Resources\V1\InvoiceResource
     {
         $invoice = $this->invoiceService->store($request->validated());
 
         return $this->show($tenant, $invoice);
     }
 
-    public function open(InvoiceStatusOpenRequest $request, Tenant $tenant, Invoice $invoice)
+    public function open(InvoiceStatusOpenRequest $request, Tenant $tenant, Invoice $invoice): \App\Http\Resources\V1\InvoiceResource
     {
         $this->invoiceService->open($invoice, $request->validated());
 
         return $this->show($tenant, $invoice);
     }
 
-    public function paid(InvoiceStatusPaidRequest $request, Tenant $tenant, Invoice $invoice)
+    public function paid(InvoiceStatusPaidRequest $request, Tenant $tenant, Invoice $invoice): \App\Http\Resources\V1\InvoiceResource
     {
         $validatedData = $request->validated();
 
@@ -60,10 +57,8 @@ class InvoiceController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @return InvoiceResource
      */
-    public function show(Tenant $tenant, Invoice $invoice)
+    public function show(Tenant $tenant, Invoice $invoice): \App\Http\Resources\V1\InvoiceResource
     {
         return new InvoiceResource($invoice);
     }
@@ -71,11 +66,9 @@ class InvoiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     *
      * @throws Exception
      */
-    public function destroy(Tenant $tenant, Invoice $invoice)
+    public function destroy(Tenant $tenant, Invoice $invoice): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $invoice->delete();
 

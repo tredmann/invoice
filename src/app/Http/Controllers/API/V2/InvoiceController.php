@@ -53,9 +53,7 @@ class InvoiceController extends Controller
     {
         $invoices = $tenant->invoices;
 
-        $arr = $invoices->map(function ($invoice) {
-            return new InvoiceResource($invoice);
-        });
+        $arr = $invoices->map(fn ($invoice): \App\Http\Resources\V2\InvoiceResource => new InvoiceResource($invoice));
 
         return $arr->toArray();
     }

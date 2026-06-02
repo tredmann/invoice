@@ -40,26 +40,29 @@ class LineItem extends Model
     use HasUuid;
     use TracksUser;
 
+    #[\Override]
     protected static function boot(): void
     {
         parent::boot();
 
-        static::created(static function ($model) {
+        static::created(static function (\App\Models\LineItem $model): void {
             InvoiceService::totalsUpdate($model->invoice);
             InvoiceService::setCurrencyIfNull($model->invoice, $model);
         });
 
-        static::updated(static function ($model) {
+        static::updated(static function ($model): void {
             InvoiceService::totalsUpdate($model->invoice);
         });
 
-        static::deleted(static function ($model) {
+        static::deleted(static function ($model): void {
             InvoiceService::totalsUpdate($model->invoice);
         });
     }
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public function user()
@@ -77,6 +80,7 @@ class LineItem extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = [
         'user_id',
         'invoice_id',

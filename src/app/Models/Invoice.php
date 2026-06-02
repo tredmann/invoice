@@ -48,8 +48,10 @@ class Invoice extends Model implements InvoiceInterface
     use HasUuid;
     use TracksUser;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public const STATUS_DRAFT = 'draft';
@@ -100,7 +102,7 @@ class Invoice extends Model implements InvoiceInterface
 
     public function cancelledInvoice(): BelongsTo
     {
-        return $this->belongsTo(__CLASS__, 'cancelled_invoice_id', 'id', 'invoices');
+        return $this->belongsTo(self::class, 'cancelled_invoice_id', 'id', 'invoices');
     }
 
     /**
@@ -108,6 +110,7 @@ class Invoice extends Model implements InvoiceInterface
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = [
         'invoice_no',
         'customer_id',
@@ -130,6 +133,7 @@ class Invoice extends Model implements InvoiceInterface
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -140,6 +144,7 @@ class Invoice extends Model implements InvoiceInterface
         ];
     }
 
+    #[\Override]
     protected $attributes = [
         'status' => self::STATUS_DRAFT,
     ];

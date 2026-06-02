@@ -26,8 +26,10 @@ class CustomerMailReceiver extends Model
     use HasUuid;
     use TracksUser;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public const GENDER = ['Herr', 'Frau', 'Divers'];
@@ -76,5 +78,6 @@ class CustomerMailReceiver extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = ['user_id', 'customer_id', 'email', 'gender', 'first_name', 'last_name'];
 }

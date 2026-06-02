@@ -9,7 +9,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class ApiTokenManagerController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('api-token-manager.index', [
             'apiTokens' => Auth::user()->tokens,
@@ -32,7 +32,7 @@ class ApiTokenManagerController extends Controller
         return redirect()->route('api-tokens.index')->with('success', __('api-token-manager.delete_success'));
     }
 
-    public function updateForm(PersonalAccessToken $personalAccessToken)
+    public function updateForm(PersonalAccessToken $personalAccessToken): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('api-token-manager.update-form', [
             'apiToken' => $personalAccessToken,

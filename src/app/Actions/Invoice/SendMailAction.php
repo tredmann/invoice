@@ -14,12 +14,12 @@ class SendMailAction
 {
     public MessageBag $messages;
 
-    public function __construct(private Invoice $invoice, private Request $request)
+    public function __construct(private readonly Invoice $invoice, private readonly Request $request)
     {
         $this->execute();
     }
 
-    public function execute()
+    public function execute(): void
     {
         $this->messages = new MessageBag();
 
@@ -35,12 +35,12 @@ class SendMailAction
         }
     }
 
-    public function fails()
+    public function fails(): bool
     {
         return count($this->messages) > 0;
     }
 
-    public function rules()
+    public function rules(): void
     {
         $this->hasInvoiceDocument();
         $this->hasMailReceiver();
@@ -69,7 +69,7 @@ class SendMailAction
             );
     }
 
-    public function mailAttachmentUploadSuccessfull()
+    public function mailAttachmentUploadSuccessfull(): void
     {
         $mailAttachmentInputName = 'mail_attachment';
 

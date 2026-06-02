@@ -6,16 +6,13 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Ownership implements Rule
 {
-    private $model;
-
     /**
      * Create a new rule instance.
      *
      * @param  string | object  $model
      */
-    public function __construct($model)
+    public function __construct(private $model)
     {
-        $this->model = $model;
     }
 
     /**

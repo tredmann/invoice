@@ -15,7 +15,7 @@ class SettingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Tenant $tenant)
+    public function index(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.settings.index', [
             'tenant' => $tenant,
@@ -25,7 +25,7 @@ class SettingController extends Controller
         ]);
     }
 
-    public function testEmailSettingsForm(Tenant $tenant)
+    public function testEmailSettingsForm(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.settings.testEmailSettings', [
             'settings' => Setting::where('tenant_id', '=', $tenant->id)->get(),
@@ -67,7 +67,7 @@ class SettingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Tenant $tenant)
+    public function create(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.settings.create', ['tenant' => $tenant]);
     }
@@ -107,7 +107,7 @@ class SettingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tenant $tenant, Setting $setting)
+    public function edit(Tenant $tenant, Setting $setting): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.settings.edit', [
             'setting' => $setting,

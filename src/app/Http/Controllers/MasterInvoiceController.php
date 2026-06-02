@@ -10,17 +10,11 @@ use App\Services\MasterInvoices\MasterInvoiceService;
 
 class MasterInvoiceController extends Controller
 {
-    /**
-     * @var MasterInvoiceService
-     */
-    private $masterInvoiceService;
-
-    public function __construct(MasterInvoiceService $masterInvoiceService)
+    public function __construct(private readonly MasterInvoiceService $masterInvoiceService)
     {
-        $this->masterInvoiceService = $masterInvoiceService;
     }
 
-    public function masterLineItems(Tenant $tenant, MasterInvoice $masterInvoice)
+    public function masterLineItems(Tenant $tenant, MasterInvoice $masterInvoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.master_invoices.masterLineItems', [
             'masterInvoice' => $masterInvoice,
@@ -29,14 +23,14 @@ class MasterInvoiceController extends Controller
         ]);
     }
 
-    public function store(Tenant $tenant, Customer $customer)
+    public function store(Tenant $tenant, Customer $customer): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
     {
         $masterInvoice = MasterInvoice::create(['customer_id' => $customer->id]);
 
         return redirect(route('masterLineItems.create', ['masterInvoice' => $masterInvoice, 'tenant' => $tenant]));
     }
 
-    public function activate(Tenant $tenant, MasterInvoice $masterInvoice)
+    public function activate(Tenant $tenant, MasterInvoice $masterInvoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.master_invoices.activate', [
             'masterInvoice' => $masterInvoice,

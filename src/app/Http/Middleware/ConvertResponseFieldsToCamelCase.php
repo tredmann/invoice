@@ -17,13 +17,13 @@ class ConvertResponseFieldsToCamelCase
     {
         $response = $next($request);
         $content = $response->getContent();
-        $json = json_decode($content, true);
+        $json = json_decode((string) $content, true);
 
         if (! is_array($json)) {
             return $response;
         }
 
-        $camelJson = static function (array $array, $root = null) use (&$camelJson) {
+        $camelJson = static function (array $array, $root = null) use (&$camelJson): array {
             // there might be a better approach
             $replaced = [];
             foreach ($array as $key => $value) {

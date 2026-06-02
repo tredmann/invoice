@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Traits\HasUuid;
@@ -26,8 +28,10 @@ class InvoiceDocument extends Model
     use HasUuid;
     use TracksUser;
 
+    #[\Override]
     protected $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public const TYPE_INVOICE_DOCUMENT = 'invoice_document';
@@ -49,6 +53,7 @@ class InvoiceDocument extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = [
         'user_id',
         'invoice_id',

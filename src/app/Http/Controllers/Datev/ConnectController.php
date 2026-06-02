@@ -8,7 +8,7 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 class ConnectController
 {
-    private GenericProvider $provider;
+    private readonly GenericProvider $provider;
 
     public function __construct()
     {
@@ -23,7 +23,7 @@ class ConnectController
         ]);
     }
 
-    public function login()
+    public function login(): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
     {
         $url = $this->provider->getAuthorizationUrl(
             [
@@ -43,7 +43,7 @@ class ConnectController
         return redirect($url);
     }
 
-    public function authorize(Request $request)
+    public function authorize(Request $request): void
     {
         ##after login
         if ($request->has('code')) {

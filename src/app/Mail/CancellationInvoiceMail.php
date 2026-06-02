@@ -47,7 +47,7 @@ class CancellationInvoiceMail extends Mailable
             ])
             ->attachFromStorageDisk($this->invoiceDocument->storage, $this->invoiceDocument->path);
 
-        if ($this->attachmentDocument) {
+        if ($this->attachmentDocument instanceof \App\Models\InvoiceDocument) {
             $message->attachFromStorageDisk($this->attachmentDocument->storage, $this->attachmentDocument->path);
         }
 

@@ -10,17 +10,11 @@ use App\Services\MasterLineItems\MasterLineItemService;
 
 class MasterLineItemController extends Controller
 {
-    /**
-     * @var MasterLineItemService
-     */
-    private $masterLineItemService;
-
-    public function __construct(MasterLineItemService $masterLineItemService)
+    public function __construct(private readonly MasterLineItemService $masterLineItemService)
     {
-        $this->masterLineItemService = $masterLineItemService;
     }
 
-    public function create(Tenant $tenant, MasterInvoice $masterInvoice)
+    public function create(Tenant $tenant, MasterInvoice $masterInvoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.master_line_items.create', ['masterInvoice' => $masterInvoice, 'tenant' => $tenant]);
     }
@@ -48,7 +42,7 @@ class MasterLineItemController extends Controller
         }
     }
 
-    public function edit(Tenant $tenant, MasterLineItem $masterLineItem)
+    public function edit(Tenant $tenant, MasterLineItem $masterLineItem): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.master_line_items.edit', ['masterLineItem' => $masterLineItem, 'tenant' => $tenant]);
     }

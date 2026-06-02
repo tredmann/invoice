@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Tenant;
 
 use App\Traits\HasUuid;
@@ -26,8 +28,10 @@ class GeneralInfo extends Model
     use HasFactory;
     use HasUuid;
 
+    #[\Override]
     public $keyType = 'string';
 
+    #[\Override]
     public $incrementing = false;
 
     public const COUNTRIES = [self::GERMANY];
@@ -44,6 +48,7 @@ class GeneralInfo extends Model
      *
      * @var list<string>
      */
+    #[\Override]
     protected $fillable = [
         'name',
         'owner',

@@ -4,17 +4,10 @@ namespace App\Jobs;
 
 use App\Services\Invoices\InvoiceService;
 use App\Services\MasterInvoices\MasterInvoiceService;
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class SubscriptionHandler
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     public function __construct()
     {

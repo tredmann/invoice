@@ -8,15 +8,11 @@ class CamelConverter
 {
     public static function convert(array $data): array
     {
-        $camelJson = static function (array $array) use (&$camelJson) {
+        $camelJson = static function (array $array) use (&$camelJson): array {
             $replaced = [];
             foreach ($array as $key => $value) {
                 $key = Str::camel($key);
-                if (is_array($value)) {
-                    $replaced[$key] = $camelJson($value);
-                } else {
-                    $replaced[$key] = $value;
-                }
+                $replaced[$key] = is_array($value) ? $camelJson($value) : $value;
             }
 
             return $replaced;

@@ -8,7 +8,7 @@ use App\Models\Tenant\Tenant;
 
 class GeneralInfoController
 {
-    public function index(Tenant $tenant)
+    public function index(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.generalInfos.index', [
             'generalInfo' => $tenant->currentGeneralInfo,
@@ -16,7 +16,7 @@ class GeneralInfoController
         ]);
     }
 
-    public function create(Tenant $tenant)
+    public function create(Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.generalInfos.create', [
             'tenant' => $tenant,
@@ -38,7 +38,7 @@ class GeneralInfoController
         );
     }
 
-    public function edit(Tenant $tenant, GeneralInfo $generalInfo)
+    public function edit(Tenant $tenant, GeneralInfo $generalInfo): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.generalInfos.edit', [
             'generalInfo' => $generalInfo,

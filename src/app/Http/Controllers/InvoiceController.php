@@ -19,7 +19,7 @@ class InvoiceController extends Controller
     {
     }
 
-    public function index(Request $request, Tenant $tenant)
+    public function index(Request $request, Tenant $tenant): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $invoices = $tenant->invoices()
             // ->where('status', '<>', Invoice::STATUS_DRAFT)
@@ -32,14 +32,14 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function store(Tenant $tenant, Customer $customer)
+    public function store(Tenant $tenant, Customer $customer): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
     {
         $invoice = Invoice::create(['customer_id' => $customer->id]);
 
         return redirect(route('lineItems.create', ['invoice' => $invoice, 'tenant' => $tenant]));
     }
 
-    public function show(Tenant $tenant, Invoice $invoice)
+    public function show(Tenant $tenant, Invoice $invoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.invoices.show', [
             'invoice' => $invoice,
@@ -47,14 +47,14 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function pdf(Tenant $tenant, Invoice $invoice)
+    public function pdf(Tenant $tenant, Invoice $invoice): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         return $this->invoiceService->pdf($invoice);
     }
 
     public function sendmail(Request $request, Tenant $tenant, Invoice $invoice)
     {
-        if ((new SendMailAction($invoice, $request))->fails()) {
+        if (new SendMailAction($invoice, $request)->fails()) {
             return redirect()->back();
         }
 
@@ -76,7 +76,7 @@ class InvoiceController extends Controller
         );
     }
 
-    public function conclude(Tenant $tenant, Invoice $invoice)
+    public function conclude(Tenant $tenant, Invoice $invoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.invoices.conclude', [
             'tenant' => $tenant,
@@ -86,7 +86,7 @@ class InvoiceController extends Controller
 
     public function open(InvoiceStatusOpenRequest $request, Tenant $tenant, Invoice $invoice)
     {
-        if ((new OpenInvoiceAction($invoice, $request))->fails()) {
+        if (new OpenInvoiceAction($invoice, $request)->fails()) {
             return redirect()->back()->with('error', 'Rechnung konnte nicht eröffnet werden!');
         }
 

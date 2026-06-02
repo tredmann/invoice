@@ -5,19 +5,12 @@ namespace App\Jobs;
 use App\Models\Invoice;
 use App\Modules\InvoiceTemplates\Models\TemplateManager;
 use App\Services\InvoiceDocuments\InvoiceDocumentService;
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Throwable;
 
 class GeneratePDF implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     /**
      * Create a new job instance.
@@ -59,7 +52,7 @@ class GeneratePDF implements ShouldQueue
         ]);
     }
 
-    public function failed(Throwable $exception)
+    public function failed(Throwable $exception): void
     {
         $this->invoice->update([
             'status' => Invoice::STATUS_OPEN_PDF_ERROR,

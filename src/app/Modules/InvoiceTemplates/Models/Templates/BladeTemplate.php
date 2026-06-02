@@ -9,8 +9,8 @@ class BladeTemplate implements Template
      * @param string $view The string of the view which can be loaded by blade
      */
     public function __construct(
-        private string $tenant,
-        private string $view,
+        private readonly string $tenant,
+        private readonly string $view,
     ) {
     }
 

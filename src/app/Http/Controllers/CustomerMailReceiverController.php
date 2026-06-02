@@ -9,7 +9,7 @@ use App\Models\Tenant\Tenant;
 
 class CustomerMailReceiverController extends Controller
 {
-    public function create(Tenant $tenant, Customer $customer)
+    public function create(Tenant $tenant, Customer $customer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.customerMailReceivers.create', [
             'customer' => $customer,
@@ -26,7 +26,7 @@ class CustomerMailReceiverController extends Controller
         )->with('success', 'Email-Empfänger erfolgreich hinzugefügt!');
     }
 
-    public function edit(Tenant $tenant, CustomerMailReceiver $customerMailReceiver)
+    public function edit(Tenant $tenant, CustomerMailReceiver $customerMailReceiver): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('default.customerMailReceivers.edit', [
             'customerMailReceiver' => $customerMailReceiver,

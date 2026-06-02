@@ -27,10 +27,8 @@ class LineItemRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [
             'quantity' => 'required|numeric|regex:/[\d]+.[\d]{2}/|max:999999999999',
