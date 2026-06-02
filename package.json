@@ -1,0 +1,21 @@
+{
+  "name": "invoice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format-staged": "pretty-quick --staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "make quality",
+      "pre-push": "make quality && make test"
+    }
+  },
+  "author": "",
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "husky": "^3.1.0",
+    "pretty-quick": "^2.0.1"
+  }
+}

@@ -1,0 +1,64 @@
+version: '3'
+volumes:
+  db-data:
+    external:
+      name: invoice-mysql-db-share
+services:
+  invoice-mysql:
+    container_name: invoice-mysql
+    image: 'mysql:latest'
+    env_file:
+      - ./src/.env
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: on-failure
+    volumes:
+      - 'db-data:/var/lib/mysql'
+    ports:
+      - '33906:3306'
+    environment:
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+    entrypoint: >-
+      sh -c " echo 'ALTER USER `${DB_USERNAME}`@`%` IDENTIFIED WITH mysql_native_password BY \"${DB_PASSWORD}\"; FLUSH PRIVILEGES; CREATE DATABASE IF NOT EXISTS `${DB_DATABASE_TESTING}`; CREATE DATABASE IF NOT EXISTS `${DB_DATABASE}`; GRANT
+      ALL ON `${DB_DATABASE_TESTING}`.* TO \"${DB_USERNAME}\"@\"%\"; GRANT ALL ON `${DB_DATABASE}`.* TO \"${DB_USERNAME}\"@\"%\"; ' > /docker-entrypoint-initdb.d/init.sql; /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci "
+  invoice-web:
+    container_name: invoice-web
+    image: "balttech/laravel-development-image:latest"
+    ports:
+      - '8090:8080'
+      - '5173:5173'
+    restart: on-failure
+    depends_on:
+      - invoice-mysql
+    links:
+      - invoice-mysql
+    volumes:
+      - './src:/var/www/html/'
+      - './config/phpcs:/var/temp/'
+    environment:
+      APP_ENV: local
+      XDEBUG_SESSION: 1
+  invoice-adminer:
+    container_name: invoice-adminer
+    image: 'adminer:latest'
+    restart: on-failure
+    depends_on:
+      - invoice-mysql
+    links:
+      - invoice-mysql
+    ports:
+      - '8091:8080'
+    environment:
+      ADMINER_DEFAULT_SERVER: '${DB_HOST}'
+      ADMINER_PLUGINS: dump-json dump-xml edit-foreign tables-filter
+
+  invoice-mailpit:
+    image: axllent/mailpit:latest
+    container_name: invoice-mailpit
+    restart: on-failure
+    ports:
+      - '11025:1025'
+      - '8125:8025'

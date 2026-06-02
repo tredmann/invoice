@@ -1,0 +1,17 @@
+.pagination-previous,
+.pagination-next {
+    background-color: $danger;
+    color: white;
+    border: none;
+
+    &:hover {
+        background-color: $danger-hover;
+        border: none;
+        color: white;
+    }
+}
+
+.pagination-link.is-current {
+    background-color: $danger;
+    border: none;
+}

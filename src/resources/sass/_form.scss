@@ -1,0 +1,36 @@
+#auth_form {
+    width: 100%;
+    max-width: 450px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
+}
+
+#form_title {
+    border-bottom: 1px solid #dfe2e6;
+}
+
+form {
+    .label {
+        font-weight: normal;
+        font-size: $body-font-size;
+        text-transform: uppercase;
+    }
+
+    .form-section {
+        border-top: 1px solid #dfe2e6;
+        border-bottom: 1px solid #dfe2e6;
+
+        h1 {
+            font-weight: bold;
+        }
+    }
+}
+
+label {
+    span {
+        font-size: $body-font-size;
+    }
+}

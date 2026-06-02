@@ -1,0 +1,28 @@
+.accordion {
+    width: 100%;
+    background-color: #fafafa;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    outline: none;
+    transition: color 0.1s, background-color 0.1s;
+    text-align: left;
+
+    &:hover {
+        color: $danger-hover;
+        background-color: #f4f4f4;
+        transition: color 0.1s, background-color 0.1s, 0.3s;
+    }
+
+    &_content {
+        background-color: white;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.2s ease-in-out;
+
+        &.show {
+            max-height: 1000px;
+            transition: max-height 0.2s ease-in-out;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+.circled {
+    height: 25px;
+    width: 25px;
+    background-color: whitesmoke;
+    border-radius: 50%;
+    text-align: center;
+}
+
+.breadcrumb-line {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.mail-icon {
+    height: 30px;
+    width: 50px;
+}

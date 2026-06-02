@@ -1,0 +1,17 @@
+.button {
+    padding: 1.5rem 1.3rem;
+    text-transform: uppercase;
+    font-size: $body-font-size;
+
+    &.is-danger {
+        background-color: $danger;
+
+        &:hover {
+            background-color: $danger-hover;
+        }
+    }
+}
+
+.mini-button {
+    padding: 1rem 0.8rem;
+}

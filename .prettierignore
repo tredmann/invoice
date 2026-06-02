@@ -1,0 +1,9 @@
+**/node_modules
+**/vendor
+**/public
+**/storage
+.~lock
+.~lock*
+/package.json
+/package-lock.json
+*.blade.php

@@ -1,0 +1,15 @@
+.notification {
+    &-fixed {
+        position: fixed;
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
+
+    &-absolute {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
+}

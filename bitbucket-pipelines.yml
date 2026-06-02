@@ -1,0 +1,65 @@
+options:
+    docker: true
+
+pipelines:
+    tags:
+        '*':
+            - step:
+                  name: Testing
+                  image: php:8.3-fpm
+                  services:
+                      - mysql
+                  caches:
+                      - composer
+                  script:
+                      - cd src
+                      - apt-get update && apt-get install -qy git zip curl libzip-dev libmcrypt-dev default-mysql-client libxml2-dev build-essential libssl-dev zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev wget
+                      - yes | pecl install mcrypt
+                      - docker-php-ext-install pdo_mysql bcmath zip gd
+                      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+                      - composer install
+                      - cp .env.pipelines.example .env
+                      - sed -i "s|^APP_KEY=.*|APP_KEY=${APP_KEY}|" .env
+                      - sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
+                      - sed -i "s|^DB_ROOT_PASSWORD=.*|DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}|" .env
+                      - sed -i "s|^GOOGLE_RECAPTCHA_SECRET=.*|GOOGLE_RECAPTCHA_SECRET=${GOOGLE_RECAPTCHA_SECRET}|" .env
+                      - sed -i "s|^GOOGLE_RECAPTCHA_KEY=.*|GOOGLE_RECAPTCHA_KEY=${GOOGLE_RECAPTCHA_KEY}|" .env
+                      - php artisan env
+                      - php artisan config:cache
+                      - ./vendor/bin/phpstan analyse --memory-limit=4g
+                      - ./vendor/bin/pint --test ./app/
+                      - php artisan migrate
+                      - php artisan serve &
+                      - sleep 5
+                      - ./vendor/bin/phpunit
+            - parallel:
+                - step:
+                      name: Build docker image
+                      script: # Modify the commands below to build your repository.
+                          - export IMAGE_NAME=balttech/invoice:$BITBUCKET_TAG
+                          - export BUILDDATE=`date "+%F %H:%M"`
+                          - docker build --file ./config/production/Dockerfile --build-arg NR_KEY="$NR_KEY" --build-arg BUILD_TAG="$BITBUCKET_TAG" --build-arg BUILD_DATE="$BUILDDATE" --build-arg BUILD_NUMBER="$BITBUCKET_BUILD_NUMBER" --build-arg BUILD_COMMIT="$BITBUCKET_COMMIT" -t balttech/invoice .
+                          - docker tag balttech/invoice $IMAGE_NAME
+                          - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+                          - docker push balttech/invoice
+                - step:
+                      name: Build docker image (digital ocean)
+                      script: # Modify the commands below to build your repository.
+                          - export REPO_NAME=balt/billworks
+                          - export TAG_NAME=balt/billworks:$BITBUCKET_TAG
+                          - export BUILDDATE=`date "+%F %H:%M"`
+                          - docker build --file ./config/production/Dockerfile --build-arg BUILD_TAG="$BITBUCKET_TAG" --build-arg BUILD_DATE="$BUILDDATE" --build-arg BUILD_NUMBER="$BITBUCKET_BUILD_NUMBER" --build-arg BUILD_COMMIT="$BITBUCKET_COMMIT" -t $TAG_NAME .
+                          - docker tag $TAG_NAME registry.digitalocean.com/$REPO_NAME:latest
+                          - docker tag $TAG_NAME registry.digitalocean.com/$TAG_NAME
+                          - docker login --username $DO_REGISTRY_API_KEY --password $DO_REGISTRY_API_KEY registry.digitalocean.com
+                          - docker push registry.digitalocean.com/$TAG_NAME
+                          - docker push registry.digitalocean.com/$REPO_NAME:latest
+definitions:
+    services:
+        mysql:
+            image: mysql:5.7
+            environment:
+                MYSQL_DATABASE: 'invoice_testing'
+                MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+                MYSQL_USER: 'invoice-app'
+                MYSQL_PASSWORD: $DB_PASSWORD

@@ -1,0 +1,13 @@
+.navbar-end {
+    &:hover {
+        background: #fafafa;
+        cursor: pointer;
+    }
+}
+
+.navbar-item {
+    &.is-group-title {
+        @extend .has-text-weight-bold;
+        background: #fafafa;
+    }
+}

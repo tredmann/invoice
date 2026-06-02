@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Models;
+
+use App\Services\MasterInvoices\MasterInvoiceService;
+use App\Traits\HasUuid;
+use App\Traits\TracksUser;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class MasterLineItem
+ *
+ * @property string $id
+ * @property User $user
+ * @property string $master_invoice_id
+ * @property MasterInvoice $masterInvoice
+ * @property int $user_id
+ * @property int $quantity
+ * @property int $price_each
+ * @property string $currency
+ * @property int $without_tax
+ * @property float $tax_rate
+ * @property int $with_tax
+ * @property string|null $unit
+ * @property string $detail
+ * @property string|null $detail_plus
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|MasterLineItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MasterLineItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MasterLineItem query()
+ *
+ * @mixin \Eloquent
+ */
+class MasterLineItem extends Model
+{
+    use HasFactory;
+    use HasUuid;
+    use TracksUser;
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::created(static function ($model) {
+            MasterInvoiceService::totalsUpdate($model->masterInvoice);
+            MasterInvoiceService::setCurrencyIfNull($model->masterInvoice, $model);
+        });
+
+        static::updated(static function ($model) {
+            MasterInvoiceService::totalsUpdate($model->masterInvoice);
+        });
+
+        static::deleted(static function ($model) {
+            MasterInvoiceService::totalsUpdate($model->masterInvoice);
+        });
+    }
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function masterInvoice()
+    {
+        return $this->belongsTo(MasterInvoice::class);
+    }
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'master_invoice_id',
+        'user_id',
+        'quantity',
+        'price_each',
+        'currency',
+        'without_tax',
+        'tax_rate',
+        'with_tax',
+        'unit',
+        'detail',
+        'detail_plus',
+    ];
+}

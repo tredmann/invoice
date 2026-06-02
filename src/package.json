@@ -1,0 +1,26 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4",
+        "axios": "^1.6",
+        "husky": "^8.0.3",
+        "jquery": "^3.5.1",
+        "laravel-vite-plugin": "^1.0",
+        "lodash": "^4.17.19",
+        "postcss": "^8.4",
+        "sass": "^1.43.2",
+        "vite": "^5.0",
+        "vite-plugin-static-copy": "^1.0.6"
+    },
+    "dependencies": {
+        "@creativebulma/bulma-tooltip": "^1.2.0",
+        "@fortawesome/fontawesome-free": "^5.15.4",
+        "bulma": "^0.9.3",
+        "bulma-checkradio": "^2.1.2"
+    }
+}

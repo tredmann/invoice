@@ -1,0 +1,103 @@
+.main {
+    &--with-sidebar {
+    }
+}
+
+.sidebar {
+    background: white;
+    position: relative;
+    max-width: 280px;
+    min-width: 230px;
+    will-change: max-width, min-width;
+    padding: 0 20px 0 20px;
+    border-right: 1px solid #dfe2e6;
+    transition: max-width 0.3s, min-width 0.3s;
+    white-space: nowrap;
+
+    &--collapsed {
+        padding: 0;
+        max-width: 20px;
+        min-width: 20px;
+        transition: max-width 0.3s, min-width 0.3s;
+
+        .sidebar {
+            &__toggle-trigger {
+                border: 1px solid transparent;
+                opacity: 1;
+
+                &::before {
+                    content: '\f054';
+                    left: 1px;
+                }
+            }
+
+            &__group {
+                transition: 0.1s;
+                opacity: 0;
+            }
+        }
+    }
+
+    &:hover {
+        .sidebar {
+            &__toggle-trigger {
+                border: 1px solid white;
+                opacity: 1;
+                transition: border-top-color 0.1s, border-right-color 0.1s, border-left-color 0.1s,
+                    border-bottom-color 0.1s;
+
+                &:hover {
+                    border: 1px solid $danger-hover;
+                    transition: border-top-color 0.1s, border-right-color 0.1s, border-left-color 0.1s,
+                        border-bottom-color 0.1s;
+                }
+            }
+        }
+    }
+
+    &__toggle-trigger {
+        position: absolute;
+        box-shadow: rgba(9, 30, 66, 0.08) 0 0 0 1px, rgba(9, 30, 66, 0.08) 0 2px 4px 1px;
+        color: #6b778c;
+        cursor: pointer;
+        height: 24px;
+        opacity: 0;
+        transform: translate(50%);
+        width: 24px;
+        background: 0 center white;
+        border: 0;
+        border-radius: 50%;
+        outline: 0;
+        top: 40px;
+        right: 0;
+        padding: 0;
+        z-index: 99;
+
+        &::before {
+            position: relative;
+            content: '\f053';
+            font-family: 'Font Awesome 5 Free', serif;
+            font-weight: 900;
+            left: -1px;
+            top: -1px;
+            color: #212529;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .menu {
+        width: 100%;
+        overflow: hidden;
+        margin-top: 42px;
+        transform: translateX(0);
+        transition: transform 0.3s;
+
+        &--collapsed {
+            transform: translateX(-150%);
+            transition: transform 0.3s;
+        }
+    }
+}

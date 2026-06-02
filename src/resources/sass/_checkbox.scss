@@ -1,0 +1,32 @@
+.is-checkradio[type='checkbox'].is-small + label {
+    font-size: 0.65rem;
+}
+
+.is-checkradio[type='checkbox'] {
+    &.is-danger:checked.has-background-color + label::before,
+    .is-danger:checked.has-background-color + label:before {
+        border-color: transparent !important;
+        background-color: $danger !important;
+    }
+
+    &.is-danger.has-background-color + label::before,
+    .is-danger.has-background-color + label:before {
+        border-color: transparent !important;
+        background-color: $danger !important;
+    }
+}
+
+.is-checkradio[type='checkbox'] {
+    &.is-danger:checked.has-background-color + label::after,
+    .is-danger:checked.has-background-color + label:after {
+        border-color: #fff !important;
+        background-color: $danger !important;
+    }
+}
+
+.is-checkradio[type='checkbox'] {
+    &.is-danger:hover:not([disabled]) + label::before,
+    .is-danger:hover:not([disabled]) + label:before {
+        border-color: $danger !important;
+    }
+}

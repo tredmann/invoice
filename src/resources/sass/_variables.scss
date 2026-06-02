@@ -1,0 +1,50 @@
+//COLORS
+$white-bg: #f5f5f5ff;
+$red: #ea3e3e;
+$white: #ffffff;
+
+//BODY
+$body-background-color: $white-bg;
+$background: $white-bg;
+$body-font-size: 0.9rem;
+
+//ADDITIONAL COLOR-SETTER
+$danger: #ea3e3e;
+$danger-hover: #c72323;
+
+//BUTTONS
+$button-focus-box-shadow-color: transparent;
+$button-focus-box-shadow-size: 0;
+$button-focus-border-color: #4a4a4a;
+
+/*
+$button-background-color: $danger;
+$button-border-color: transparent;
+$button-color: $white;
+
+$button-hover-color: $white;
+$button-hover-border-color: transparent;
+
+$button-active-color: $white;
+$button-active-border-color: transparent;
+
+$button-focus-color: $white;
+*/
+
+//INPUT
+$input-focus-border-color: $red;
+$input-focus-box-shadow-color: rgba(234, 62, 62, 0.2);
+$input-focus-box-shadow-size: 0 0 0 0;
+$input-arrow: $danger-hover;
+
+//TABLE
+$table-head-cell-border-width: 0 0 1px;
+
+//NAVBAR
+$navbar-item-hover-color: $danger-hover;
+
+//SIDEBAR
+$menu-item-active-background-color: $danger-hover;
+$menu-item-hover-background-color: #fafafa;
+
+$footer-background-color: $white;

@@ -1,0 +1,41 @@
+.profile-menu {
+    border-top: 1px solid #f5f5f5;
+    position: absolute;
+    background-color: white;
+    right: 0;
+    top: 56px;
+    min-width: 250px;
+    box-shadow: 0px 2px 3px 0px #dbdbdb;
+
+    &-group-title {
+        padding: 15px;
+        font-size: 0.8rem;
+        border-bottom: 1px solid #dfe2e6;
+        display: flex;
+    }
+
+    &-items {
+        a {
+            width: 100%;
+            display: block;
+            padding: 10px 15px;
+            color: $body-color;
+            &:hover {
+                background: #fafafa;
+                color: $danger-hover;
+            }
+
+            &:last-child {
+                border-top: 1px solid #dfe2e6;
+            }
+
+            &:only-child {
+                border: none;
+            }
+        }
+    }
+}
+
+#profile_menu_trigger {
+    user-select: None;
+}
