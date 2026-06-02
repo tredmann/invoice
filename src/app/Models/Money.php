@@ -26,7 +26,7 @@ class Money implements \Stringable
         return (string) (string) $this->currency !== '' && (string) $this->currency !== '0' ? $this->currencyFormat() : (string) $this->money;
     }
 
-    private function currencyFormat(): ?string
+    private function currencyFormat(): string
     {
         switch ($this->currency) {
             case self::CURRENCY_EUR:
@@ -39,6 +39,6 @@ class Money implements \Stringable
 
                 return '$' . $x;
         }
-        return null;
+        return '';
     }
 }
