@@ -2,7 +2,12 @@ FROM serversideup/php:8.5-frankenphp
 
 USER root
 
-RUN install-php-extensions xdebug
+RUN install-php-extensions gd imagick xdebug
+
+# mysqldump (for spatie/laravel-backup)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
 
 # Node + chokidar for Laravel Octane file watching
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
