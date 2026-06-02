@@ -2,7 +2,7 @@ FROM serversideup/php:8.5-frankenphp
 
 USER root
 
-RUN install-php-extensions xdebug
+RUN install-php-extensions gd imagick xdebug
 
 # Node + chokidar for Laravel Octane file watching
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
