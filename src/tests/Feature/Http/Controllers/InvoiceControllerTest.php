@@ -11,6 +11,7 @@ use App\Models\Tenant\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Spatie\LaravelPdf\Facades\Pdf;
 use Tests\TestCase;
 
 class InvoiceControllerTest extends TestCase
@@ -51,6 +52,8 @@ class InvoiceControllerTest extends TestCase
 
     public function testGetPdf()
     {
+        Pdf::fake();
+
         $legalInfo = LegalInfo::factory()->create();
         $generalInfo = GeneralInfo::factory()->create();
 
@@ -82,6 +85,8 @@ class InvoiceControllerTest extends TestCase
 
     public function testHasLineItemOpen()
     {
+        Pdf::fake();
+
         $legalInfo = LegalInfo::factory()->create();
         $generalInfo = GeneralInfo::factory()->create();
 

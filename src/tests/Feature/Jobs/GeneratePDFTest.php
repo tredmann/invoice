@@ -128,13 +128,9 @@ class GeneratePDFTest extends TestCase
     {
         $output = [];
         $status = 1;
-        @exec('which weasyprint 2>/dev/null', $output, $status);
+        @exec('command -v weasyprint 2>/dev/null', $output, $status);
 
-        if ($status !== 0 || $output === []) {
-            return false;
-        }
-
-        return class_exists(\Pontedilana\PhpWeasyPrint\Pdf::class);
+        return $status === 0 && $output !== [];
     }
 
     public function testRenderingGoesThroughSpatiePdfFacade(): void
