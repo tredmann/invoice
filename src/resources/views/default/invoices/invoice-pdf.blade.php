@@ -1,261 +1,270 @@
-<html>
-<head http-equiv="Content-Type" content="text/html; charset=utf-8" >
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>{{ __('invoices.invoice') }} {{ $invoice->invoice_no }}</title>
     <style>
+        @page {
+            size: A4;
+            margin: 25mm 20mm 35mm 20mm;
 
-        @page { margin: 50px 50px 100px; }
+            @top-center {
+                content: element(pageHeader);
+                vertical-align: bottom;
+                padding-bottom: 4mm;
+                border-bottom: 1px solid #000;
+            }
+
+            @bottom-left {
+                content: element(pageFooter);
+                vertical-align: top;
+                padding-top: 4mm;
+                border-top: 1px solid #000;
+                font-size: 8pt;
+            }
+
+            @bottom-right {
+                content: "{{ __('invoicePdf.page') }} " counter(page) " {{ __('invoicePdf.of') }} " counter(pages);
+                font-size: 8pt;
+                vertical-align: bottom;
+                padding-bottom: 2mm;
+            }
+        }
 
         body {
-            margin-bottom: 15px;
+            font-family: "DejaVu Sans", "Noto Sans", sans-serif;
+            font-size: 10pt;
+            color: #000;
+            margin: 0;
         }
 
-        header {
-            border-bottom: 1px solid black;
-            font-size: 10px;
+        #pageHeader {
+            position: running(pageHeader);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 9pt;
         }
 
-        footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-            font-size: 10px;
+        #pageHeader img {
+            max-height: 22mm;
+            max-width: 60mm;
         }
 
-        table {
+        #pageFooter {
+            position: running(pageFooter);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8mm;
+            font-size: 8pt;
+        }
+
+        .customer-block {
+            margin: 6mm 0 4mm;
+        }
+
+        .customer-block p {
+            margin: 1mm 0;
+        }
+
+        .invoice-meta {
+            margin: 4mm 0 6mm;
+            padding: 2mm 0;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4mm;
+        }
+
+        .invoice-meta .label {
+            color: #555;
+        }
+
+        .invoice-meta strong {
+            font-weight: bold;
+        }
+
+        table.line-items {
             width: 100%;
-        }
-
-        main table {
             border-collapse: collapse;
+            margin-top: 4mm;
         }
 
-        main #line_items th {
-            border-bottom: 1px solid black;
+        table.line-items thead th {
+            border-bottom: 1px solid #000;
             text-align: left;
-            font-size: medium;
+            padding: 2mm 1mm;
+            font-size: 10pt;
         }
 
-        main #line_items td {
-            border-bottom: 1px solid black;
-            padding-bottom: 5px;
-            padding-top: 5px;
-            font-size: small;
+        table.line-items tbody td {
+            border-bottom: 1px solid #ccc;
+            padding: 2mm 1mm;
             vertical-align: top;
+            font-size: 9pt;
         }
 
-        header #placeholder_image {
-            height: 75px;
-            width: auto;
-            max-width: 150px;
+        table.line-items tbody tr {
+            break-inside: avoid;
         }
 
-        div {
-            page-break-inside: avoid;
+        table.line-items td p {
+            margin: 1px 0;
         }
 
-        p {
-            margin: 2px;
+        .num {
+            text-align: right;
+            white-space: nowrap;
         }
 
         .thick {
             font-weight: bold;
         }
 
+        .totals {
+            margin-top: 4mm;
+            break-inside: avoid;
+        }
+
+        .totals table {
+            width: 60%;
+            margin-left: auto;
+            border-collapse: collapse;
+        }
+
+        .totals td {
+            padding: 1mm 2mm;
+        }
+
+        .totals .grand td {
+            border-top: 1px solid #000;
+            font-weight: bold;
+        }
+
+        .payment {
+            margin-top: 8mm;
+            break-inside: avoid;
+        }
+
+        .payment p {
+            margin: 2mm 0;
+        }
     </style>
 </head>
 <body>
-    <footer>
-        <table>
+
+<div id="pageHeader">
+    <div>
+        @if(file_exists(public_path('images/png/500x261-balt.png')))
+            <img src="{{ public_path('images/png/500x261-balt.png') }}" alt="">
+        @endif
+        <div>{{ $generalInfo->name }} · {{ $generalInfo->street }} · {{ $generalInfo->postal }} {{ $generalInfo->city }}</div>
+    </div>
+    <div style="text-align: right;">
+        <div>{{ $generalInfo->name }}</div>
+        <div>{{ $generalInfo->street }}</div>
+        <div>{{ $generalInfo->postal }} {{ $generalInfo->city }}</div>
+    </div>
+</div>
+
+<div id="pageFooter">
+    <div>
+        <div>{{ __('attributes.registry_court') }}: {{ $legalInfo->registry_court }}</div>
+        <div>{{ __('attributes.registry_no') }}: {{ $legalInfo->registry_no }}</div>
+        <div>{{ __('attributes.company_owner') }}: {{ $legalInfo->company_owner }}</div>
+    </div>
+    <div style="text-align: right;">
+        <div>{{ __('attributes.tax_no') }}: {{ $legalInfo->tax_no }}</div>
+        <div>{{ __('attributes.vat_no') }}: {{ $legalInfo->vat_no }}</div>
+        <div>{{ __('attributes.swift_bic') }}: {{ $legalInfo->swift_bic }}</div>
+        <div>{{ __('attributes.iban') }}: {{ $legalInfo->iban }}</div>
+    </div>
+</div>
+
+<section class="customer-block">
+    <p>{{ $customer->company }}</p>
+    <p>{{ $customer->name }}</p>
+    <p>{{ $customer->street }}</p>
+    <p>{{ $customer->postal }} {{ $customer->city }}</p>
+</section>
+
+<section class="invoice-meta">
+    <div>
+        <strong>{{ __('invoices.invoice') }}:
+            {{ $invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2)) }}
+        </strong>
+    </div>
+    <div style="text-align: right;">
+        <div>{{ __('attributes.customer_no') }}: {{ $customer->customer_no }}</div>
+        <div>{{ __('attributes.invoice_no') }}:
+            {{ $invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2)) }}
+        </div>
+        <div>{{ __('translate.date') }}: {{ now()->tz('CET')->format('d.m.Y') }}</div>
+        <div>{{ __('attributes.performed_when') }}: {{ $invoice->performed_when ?? sprintf('(%s)', trans('attributes.performed_when')) }}</div>
+    </div>
+</section>
+
+<table class="line-items">
+    <thead>
+        <tr>
+            <th>{{ __('lineItems.positionShort') }}</th>
+            <th class="num">{{ __('attributes.quantity') }}</th>
+            <th>{{ __('attributes.price_each') }}</th>
+            <th>{{ __('attributes.unit') }}</th>
+            <th style="width: 50%;">{{ __('lineItems.details') }}</th>
+            <th class="num">{{ __('attributes.without_tax') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($invoice->lineItems->sortBy('created_at') as $lineItem)
             <tr>
-                <td style="text-align: left; vertical-align: top">
-                    <div>{{ __('attributes.registry_court') }}: {{$legalInfo->registry_court}}</div>
-                    <div>{{ __('attributes.registry_no') }}: {{$legalInfo->registry_no}}</div>
-                    <div>{{ __('attributes.company_owner') }}: {{$legalInfo->company_owner}}</div>
+                <td>{{ $loop->iteration }}</td>
+                <td class="num">{{ str_replace('.', ',', $lineItem->quantity) }}</td>
+                <td>@money($lineItem->price_each, $lineItem->currency)</td>
+                <td>{{ $lineItem->unit }}</td>
+                <td>
+                    <p class="thick">{{ $lineItem->detail }}</p>
+                    <p>{{ $lineItem->detail_plus }}</p>
                 </td>
-                <td style="text-align: right;  vertical-align: top">
-                    <div>{{ __('attributes.tax_no') }}: {{$legalInfo->tax_no}}</div>
-                    <div>{{ __('attributes.vat_no') }}: {{$legalInfo->vat_no}}</div>
-                    <div>{{ __('attributes.swift_bic') }}: {{$legalInfo->swift_bic}}</div>
-                    <div>{{ __('attributes.iban') }}: {{$legalInfo->iban}}</div>
-                </td>
+                <td class="num">@money($lineItem->without_tax, $lineItem->currency)</td>
             </tr>
-        </table>
-    </footer>
-    <main>
+        @endforeach
+    </tbody>
+</table>
 
-        <header>
-            <table>
-                <tr>
-                    <td>
-                        <img id="placeholder_image" src="{{ public_path('images/png/500x261-balt.png') }}"/>
-                        <div class="hor-tenant-info">
-                            <div>{{$generalInfo->name}} / {{$generalInfo->street}} / {{$generalInfo->postal}} {{$generalInfo->city}}</div>
-                        </div>
-                    </td>
-                    <td style="text-align: right; vertical-align: top">
-                        <div class="vert-tenant-info">
-                            <div>{{$generalInfo->name}}</div>
-                            <div>{{$generalInfo->street}}</div>
-                            <div>{{$generalInfo->postal}} {{$generalInfo->city}}</div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </header>
-
-        <div id="info" style="margin-bottom: 50px">
-            <div id="customer_info" style="margin-top: 10px; margin-bottom: 50px;">
-                <div id="customer_info">
-                    <p>{{$customer->company}}</p>
-                    <p>{{$customer->name}}</p>
-                    <p>{{$customer->street}}</p>
-                    <p>{{$customer->postal}} {{$customer->city}}</p>
-                </div>
-            </div>
-            <div id="invoice_info" style="border-top: 1px solid black; border-bottom: 1px solid black;">
-                <table>
-                    <tr>
-                        <td style="text-align: left; vertical-align: top">
-                            <p class="thick">{{ __('invoices.invoice') }}:
-                                {{$invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2))}}
-                            </p>
-                        </td>
-                        <td style="text-align: right; vertical-align: top">
-                            <p>{{ __('attributes.customer_no') }}: {{$customer->customer_no}}</p>
-                            <p>{{ __('attributes.invoice_no') }}:
-                                {{$invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2))}}
-                            </p>
-                            <p>{{ __('translate.date') }}: {{now()->tz('CET')->format('d.m.Y')}}</p>
-                            <p>{{ __('attributes.performed_when') }}: {{$invoice->performed_when ?? sprintf('(%s)', trans('attributes.performed_when'))}}</p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <table id="line_items">
-            <thead>
+<div class="totals">
+    <table>
+        <tr>
+            <td class="thick">{{ __('attributes.total_without_tax') }}</td>
+            <td class="num thick">@money($invoice->total_without_tax, $invoice->currency)</td>
+        </tr>
+        @foreach($invoice->getTaxDistribution() as $taxRate => $tax)
             <tr>
-                <th>{{ __('lineItems.positionShort') }}</th>
-                <th>{{ __('attributes.quantity') }}</th>
-                <th>{{ __('attributes.price_each') }}</th>
-                <th>{{ __('attributes.unit') }}</th>
-                <th style="width: 50%">{{ __('lineItems.details') }}</th>
-                <th style="text-align: right">{{ __('attributes.without_tax') }}</th>
+                <td>{{ $taxRate }}% (@money($tax['without_tax'], $invoice->currency))</td>
+                <td class="num">@money($tax['tax'], $invoice->currency)</td>
             </tr>
-            </thead>
-            <tbody>
-            @foreach($invoice->lineItems->sortBy('created_at') as $lineItem)
-                <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{(str_replace('.', ',', $lineItem->quantity))}}</td>
-                    <td>@money($lineItem->price_each, $lineItem->currency)</td>
-                    <td>{{$lineItem->unit}}</td>
-                    <td>
-                        <p class="thick">{{$lineItem->detail}}</p>
-                        <p>{{$lineItem->detail_plus}}</p>
-                    </td>
-                    <td style="text-align: right">@money($lineItem->without_tax, $lineItem->currency)</td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+        @endforeach
+        <tr class="grand">
+            <td>{{ __('attributes.total_with_tax') }}</td>
+            <td class="num">@money($invoice->total_with_tax, $invoice->currency)</td>
+        </tr>
+    </table>
+</div>
 
-        <div id="calculations">
-            <div id="interim_calc" style="margin-top: 10px; margin-bottom: 5px">
+<section class="payment">
+    <p>Bitte überweisen Sie den vollen Betrag in Höhe von @money($invoice->total_with_tax, $invoice->currency) unter Angabe der
+        Rechnungsnummer {{ $invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2)) }}
+        bis {{ $invoice->date_due ? $invoice->date_due->format('d.m.Y') : sprintf('(%s)', trans('attributes.date_due')) }}
+        auf folgendes Konto:</p>
 
-                <table>
-                    <tr>
-                        <td class='thick'>
-                            {{ __('attributes.total_without_tax') }}
-                        </td>
-                        <td style="text-align: right; vertical-align: top" class='thick'>
-                            <p>
-                                @money($invoice->total_without_tax, $invoice->currency)
-                            </p>
-                        </td>
-                    </tr>
-                </table>
+    <p>{{ __('invoicePdf.reason_for_payment') }}:
+        {{ $invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2)) }}
+    </p>
+    <p>{{ __('attributes.bank_institute') }}: {{ $legalInfo->bank_institute }}</p>
+    <p>{{ __('attributes.iban') }}: {{ $legalInfo->iban }}</p>
+    <p>{{ __('attributes.swift_bic') }}: {{ $legalInfo->swift_bic }}</p>
+</section>
 
-
-                <table>
-                    @foreach($invoice->getTaxDistribution() as $taxRate => $tax)
-                        <tr>
-                            <td>
-                                <p>
-                                    {{$taxRate}}% (@money($tax['without_tax'], $invoice->currency))
-                                </p>
-                            </td>
-                            <td style="text-align: right; vertical-align: top">
-                                <p>
-                                    @money($tax['tax'], $invoice->currency)
-                                </p>
-                            </td>
-                        </tr>
-                    @endforeach
-                </table>
-
-            </div>
-
-            <hr class="medium-thin">
-
-            <div id="final_calc" style="margin-top: 5px">
-                <table>
-                    <tr>
-                        <td class="thick">
-                            {{ __('attributes.total_with_tax') }}
-                        </td>
-                        <td style="text-align: right; vertical-align: top" class='thick'>
-                            <p>
-                                @money($invoice->total_with_tax, $invoice->currency)
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-
-            </div>
-        </div>
-
-        <div id="payment">
-            <div id="payment_instruction" style="margin-top: 30px">
-
-                <p>Bitte überweisen Sie den vollen Betrag in Höhe von @money($invoice->total_with_tax, $invoice->currency) unter Angabe der
-                    Rechnungsnummer {{$invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2))}} bis {{$invoice->date_due ? $invoice->date_due->format('d.m.Y') : sprintf('(%s)', trans('attributes.date_due'))}} auf folgendes Konto:</p>
-            </div>
-
-            <div id="payment_details" style="margin-top: 10px">
-                <p>{{ __('invoicePdf.reason_for_payment') }}:
-                    {{$invoice->invoice_no ?: sprintf('(%s)', $uniqueNumber::predictedNumber($invoice, 2))}}
-                </p>
-                <p>{{ __('attributes.bank_institute') }}: {{$legalInfo->bank_institute}}</p>
-                <p>{{ __('attributes.iban') }}: {{$legalInfo->iban}}</p>
-                <p>{{ __('attributes.swift_bic') }}: {{$legalInfo->swift_bic}}</p>
-            </div>
-        </div>
-
-        <script type="text/php">
-        if (isset($pdf))
-        {
-            $x = 267.5;
-            $y = 815;
-            $text = "{{ __('invoicePdf.page') }} {PAGE_NUM} {{ __('invoicePdf.of') }}  {PAGE_COUNT}";
-            $font = null;
-            $size = 8;
-            $color = array(0,0,0);
-
-            $h = $pdf->get_height();
-            $w = $pdf->get_width();
-
-
-
-            $word_space = 0.0;  //  default
-            $char_space = 0.0;  //  default
-            $angle = 0.0;   //  default
-            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
-        }
-        </script>
-    </main>
 </body>
 </html>
