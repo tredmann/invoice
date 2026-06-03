@@ -23,6 +23,7 @@
         "league/oauth2-client": "^2.7",
         "livewire/livewire": "^4.0",
         "maatwebsite/excel": "^4.0",
+        "pontedilana/php-weasyprint": "^2.7",
         "spatie/laravel-backup": "^10.0",
         "spatie/laravel-pdf": "^2.0",
         "tucker-eric/eloquentfilter": "^3.2"
