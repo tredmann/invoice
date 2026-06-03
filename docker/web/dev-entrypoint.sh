@@ -19,6 +19,23 @@ term_handler() {
 
 trap term_handler TERM INT QUIT
 
+echo "▶ Waiting for database..."
+RETRIES=0
+until mysql --skip-ssl -h "${DB_HOST}" -u "${DB_USERNAME}" -p"${DB_PASSWORD}" "${DB_DATABASE}" -e "SELECT 1" > /dev/null 2>&1; do
+    RETRIES=$((RETRIES + 1))
+    if [ "$RETRIES" -ge 30 ]; then
+        echo ""
+        echo "✖ Database not ready after 60s. Check DB_HOST/DB_USERNAME/DB_PASSWORD/DB_DATABASE in src/.env"
+        exit 1
+    fi
+    printf '.'
+    sleep 2
+done
+echo ""
+
+echo "▶ Running migrations..."
+php "$APP_BASE_DIR/artisan" migrate --no-interaction
+
 echo "▶ Starting Laravel queue worker..."
 php "$APP_BASE_DIR/artisan" queue:work --tries=3 --sleep=3 &
 QUEUE_PID=$!

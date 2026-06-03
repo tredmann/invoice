@@ -40,6 +40,8 @@ services:
     volumes:
       - './src:/var/www/html'
       - './config/phpcs:/var/temp/'
+    env_file:
+      - ./src/.env
     environment:
       APP_ENV: local
       XDEBUG_SESSION: 1
