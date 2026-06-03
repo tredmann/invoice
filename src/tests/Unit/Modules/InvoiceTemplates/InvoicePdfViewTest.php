@@ -25,6 +25,14 @@ class InvoicePdfViewTest extends TestCase
         self::assertStringContainsString('counter(page)', $html, 'expected page numbering via counter(page)');
     }
 
+    public function testDefaultCancellationInvoicePdfCompilesAndContainsRequiredFields(): void
+    {
+        $html = $this->renderInvoiceView('default.invoices.cancelled-invoice-pdf');
+
+        self::assertStringContainsString('@page', $html);
+        self::assertStringContainsString('counter(page)', $html);
+    }
+
     private function renderInvoiceView(string $view): string
     {
         $tenant = $this->makeTenantWithEverything();
