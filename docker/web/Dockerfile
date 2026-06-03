@@ -4,6 +4,25 @@ USER root
 
 RUN install-php-extensions gd imagick xdebug
 
+# WeasyPrint (Python-based PDF renderer) + runtime libs + base fonts.
+# We install via apt for reproducibility; the build fails fast if the binary is broken.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        weasyprint \
+        libpango-1.0-0 \
+        libpangoft2-1.0-0 \
+        libharfbuzz0b \
+        libcairo2 \
+        libgdk-pixbuf-2.0-0 \
+        shared-mime-info \
+        fonts-dejavu \
+        fonts-noto \
+        fonts-liberation \
+    && rm -rf /var/lib/apt/lists/* \
+    && weasyprint --version
+
 # mysqldump (for spatie/laravel-backup)
 RUN apt-get update \
     && apt-get install -y --no-install-recommends default-mysql-client \
