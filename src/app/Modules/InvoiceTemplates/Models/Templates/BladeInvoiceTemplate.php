@@ -33,15 +33,23 @@ class BladeInvoiceTemplate implements Template
 
     public function render(array $data): string
     {
-        $tempPath = tempnam(sys_get_temp_dir(), 'invoice_pdf_').'.pdf';
+        $basePath = tempnam(sys_get_temp_dir(), 'invoice_pdf_');
+
+        if ($basePath === false) {
+            throw new \RuntimeException('Failed to allocate tempfile for PDF render');
+        }
+
+        $tempPath = $basePath.'.pdf';
+
+        // Pre-create the .pdf file so file_get_contents always has a target.
+        // Under Pdf::fake(), FakePdfBuilder::save() does not write to disk;
+        // without this the subsequent file_get_contents call would return false.
+        // Under the real WeasyPrint driver, save() overwrites this stub.
+        touch($tempPath);
 
         try {
             Pdf::view($this->view, $this->prepareDataForView($data['invoice']))
                 ->save($tempPath);
-
-            if (! is_file($tempPath)) {
-                return '';
-            }
 
             $bytes = file_get_contents($tempPath);
 
@@ -51,6 +59,7 @@ class BladeInvoiceTemplate implements Template
 
             return $bytes;
         } finally {
+            @unlink($basePath);
             if (is_file($tempPath)) {
                 @unlink($tempPath);
             }
