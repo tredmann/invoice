@@ -59,11 +59,11 @@
             font-size: 8pt;
         }
 
-        .customer-block {
+        .customer-address {
             margin: 6mm 0 4mm;
         }
 
-        .customer-block p {
+        .customer-address p {
             margin: 1mm 0;
         }
 
@@ -182,12 +182,7 @@
     </div>
 </div>
 
-<section class="customer-block">
-    <p>{{ $customer->company }}</p>
-    <p>{{ $customer->name }}</p>
-    <p>{{ $customer->street }}</p>
-    <p>{{ $customer->postal }} {{ $customer->city }}</p>
-</section>
+<x-pdf.customer-address :customer="$customer" />
 
 <section class="invoice-meta">
     <div>
