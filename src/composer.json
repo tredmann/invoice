@@ -10,7 +10,6 @@
     "require": {
         "php": "^8.5",
         "balt-technologies/standards": "^0.0.4",
-        "barryvdh/laravel-dompdf": "^3.0",
         "diglactic/laravel-breadcrumbs": "^10.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/boost": "^2.0",
