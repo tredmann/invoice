@@ -231,7 +231,7 @@
         <tr>
             <th>{{ __('lineItems.positionShort') }}</th>
             <th class="num">{{ __('attributes.quantity') }}</th>
-            <th>{{ __('attributes.price_each') }}</th>
+            <th class="num">{{ __('attributes.price_each') }}</th>
             <th>{{ __('attributes.unit') }}</th>
             <th style="width: 50%;">{{ __('lineItems.details') }}</th>
             <th class="num">{{ __('attributes.without_tax') }}</th>
@@ -242,7 +242,7 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td class="num">{{ str_replace('.', ',', $lineItem->quantity) }}</td>
-                <td>-@money($lineItem->price_each, $lineItem->currency)</td>
+                <td class="num">-@money($lineItem->price_each, $lineItem->currency)</td>
                 <td>{{ $lineItem->unit }}</td>
                 <td>
                     <p class="thick">{{ $lineItem->detail }}</p>
