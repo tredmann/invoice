@@ -17,20 +17,10 @@
 
             @bottom-left {
                 content: element(pageFooter);
-                width: 145mm;
+                width: 170mm;
                 vertical-align: top;
                 padding-top: 3mm;
                 font-size: 7.5pt;
-            }
-
-            @bottom-right {
-                content: "{{ __('invoicePdf.page') }} " counter(page) " {{ __('invoicePdf.of') }} " counter(pages);
-                width: 25mm;
-                vertical-align: top;
-                padding-top: 3mm;
-                font-size: 8pt;
-                text-align: right;
-                white-space: nowrap;
             }
         }
 
@@ -67,9 +57,17 @@
         }
 
         #pageFooter table {
-            width: 145mm;
+            width: 170mm;
             border-collapse: collapse;
             table-layout: fixed;
+        }
+
+        #pageFooter::after {
+            content: "{{ __('invoicePdf.page') }} " counter(page) " {{ __('invoicePdf.of') }} " counter(pages);
+            display: block;
+            text-align: center;
+            margin-top: 4mm;
+            font-size: 8pt;
         }
 
         #pageFooter td.footer-cell {
@@ -157,20 +155,24 @@
         }
 
         .totals table {
-            width: 60%;
-            margin-left: auto;
+            width: 100%;
             border-collapse: collapse;
         }
 
         .totals td {
-            padding: 1mm 2mm;
+            padding: 1mm 0;
+        }
+
+        .totals .grand td {
+            border-top: 1px solid #000;
+            font-weight: bold;
+            padding-top: 2mm;
         }
 
         hr.medium-thin {
             border: none;
             border-top: 1px solid #000;
-            margin: 2mm 0 2mm auto;
-            width: 60%;
+            margin: 2mm 0;
         }
 
         .payment {

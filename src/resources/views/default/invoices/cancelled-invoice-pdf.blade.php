@@ -18,22 +18,11 @@
 
             @bottom-left {
                 content: element(pageFooter);
-                width: 145mm;
+                width: 170mm;
                 vertical-align: top;
                 padding-top: 3mm;
                 border-top: 1px solid #000;
                 font-size: 7.5pt;
-            }
-
-            @bottom-right {
-                content: "{{ __('invoicePdf.page') }} " counter(page) " {{ __('invoicePdf.of') }} " counter(pages);
-                width: 25mm;
-                vertical-align: top;
-                padding-top: 3mm;
-                border-top: 1px solid #000;
-                font-size: 8pt;
-                text-align: right;
-                white-space: nowrap;
             }
         }
 
@@ -78,7 +67,7 @@
         }
 
         #pageFooter table {
-            width: 145mm;
+            width: 170mm;
             border-collapse: collapse;
         }
 
@@ -90,6 +79,14 @@
 
         #pageFooter td.left { width: 50%; }
         #pageFooter td.right { width: 50%; text-align: right; }
+
+        #pageFooter::after {
+            content: "{{ __('invoicePdf.page') }} " counter(page) " {{ __('invoicePdf.of') }} " counter(pages);
+            display: block;
+            text-align: center;
+            margin-top: 4mm;
+            font-size: 8pt;
+        }
 
         .customer-address {
             margin: 6mm 0 4mm;
@@ -160,18 +157,18 @@
         }
 
         .totals table {
-            width: 60%;
-            margin-left: auto;
+            width: 100%;
             border-collapse: collapse;
         }
 
         .totals td {
-            padding: 1mm 2mm;
+            padding: 1mm 0;
         }
 
         .totals .grand td {
             border-top: 1px solid #000;
             font-weight: bold;
+            padding-top: 2mm;
         }
     </style>
 </head>
