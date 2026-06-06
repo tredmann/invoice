@@ -23,7 +23,7 @@ class Money implements \Stringable
 
     public function __toString(): string
     {
-        return (string) (string) $this->currency !== '' && (string) $this->currency !== '0' ? $this->currencyFormat() : (string) $this->money;
+        return (string) $this->currency !== '' && (string) $this->currency !== '0' ? $this->currencyFormat() : (string) $this->money;
     }
 
     private function currencyFormat(): string
