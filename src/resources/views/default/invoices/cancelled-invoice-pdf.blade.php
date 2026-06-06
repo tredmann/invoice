@@ -6,28 +6,34 @@
     <style>
         @page {
             size: A4;
-            margin: 25mm 20mm 35mm 20mm;
+            margin: 38mm 20mm 38mm 20mm;
 
-            @top-center {
+            @top-left {
                 content: element(pageHeader);
+                width: 170mm;
                 vertical-align: bottom;
-                padding-bottom: 4mm;
+                padding-bottom: 3mm;
                 border-bottom: 1px solid #000;
             }
 
             @bottom-left {
                 content: element(pageFooter);
+                width: 145mm;
                 vertical-align: top;
-                padding-top: 4mm;
+                padding-top: 3mm;
                 border-top: 1px solid #000;
-                font-size: 8pt;
+                font-size: 7.5pt;
             }
 
             @bottom-right {
                 content: "{{ __('invoicePdf.page') }} " counter(page) " {{ __('invoicePdf.of') }} " counter(pages);
+                width: 25mm;
+                vertical-align: top;
+                padding-top: 3mm;
+                border-top: 1px solid #000;
                 font-size: 8pt;
-                vertical-align: bottom;
-                padding-bottom: 2mm;
+                text-align: right;
+                white-space: nowrap;
             }
         }
 
@@ -40,24 +46,50 @@
 
         #pageHeader {
             position: running(pageHeader);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
             font-size: 9pt;
         }
 
+        #pageHeader table {
+            width: 170mm;
+            border-collapse: collapse;
+        }
+
+        #pageHeader td {
+            vertical-align: bottom;
+            padding: 0;
+        }
+
+        #pageHeader td.logo-cell { width: 60%; }
+        #pageHeader td.sender-cell { width: 40%; text-align: right; }
+
         #pageHeader img {
-            max-height: 22mm;
+            max-height: 18mm;
             max-width: 60mm;
+        }
+
+        #pageHeader .caption {
+            font-size: 8pt;
+            margin-top: 1.5mm;
         }
 
         #pageFooter {
             position: running(pageFooter);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8mm;
-            font-size: 8pt;
+            font-size: 7.5pt;
         }
+
+        #pageFooter table {
+            width: 145mm;
+            border-collapse: collapse;
+        }
+
+        #pageFooter td {
+            vertical-align: top;
+            padding: 0;
+            line-height: 1.4;
+        }
+
+        #pageFooter td.left { width: 50%; }
+        #pageFooter td.right { width: 50%; text-align: right; }
 
         .customer-address {
             margin: 6mm 0 4mm;
@@ -146,31 +178,39 @@
 <body>
 
 <div id="pageHeader">
-    <div>
-        @if(file_exists(public_path('images/png/500x261-balt.png')))
-            <img src="{{ public_path('images/png/500x261-balt.png') }}" alt="">
-        @endif
-        <div>{{ $generalInfo->name }} · {{ $generalInfo->street }} · {{ $generalInfo->postal }} {{ $generalInfo->city }}</div>
-    </div>
-    <div style="text-align: right;">
-        <div>{{ $generalInfo->name }}</div>
-        <div>{{ $generalInfo->street }}</div>
-        <div>{{ $generalInfo->postal }} {{ $generalInfo->city }}</div>
-    </div>
+    <table>
+        <tr>
+            <td class="logo-cell">
+                @if(file_exists(public_path('images/png/500x261-balt.png')))
+                    <img src="{{ public_path('images/png/500x261-balt.png') }}" alt="">
+                @endif
+                <div class="caption">{{ $generalInfo->name }} · {{ $generalInfo->street }} · {{ $generalInfo->postal }} {{ $generalInfo->city }}</div>
+            </td>
+            <td class="sender-cell">
+                <div>{{ $generalInfo->name }}</div>
+                <div>{{ $generalInfo->street }}</div>
+                <div>{{ $generalInfo->postal }} {{ $generalInfo->city }}</div>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <div id="pageFooter">
-    <div>
-        <div>{{ __('attributes.registry_court') }}: {{ $legalInfo->registry_court }}</div>
-        <div>{{ __('attributes.registry_no') }}: {{ $legalInfo->registry_no }}</div>
-        <div>{{ __('attributes.company_owner') }}: {{ $legalInfo->company_owner }}</div>
-    </div>
-    <div style="text-align: right;">
-        <div>{{ __('attributes.tax_no') }}: {{ $legalInfo->tax_no }}</div>
-        <div>{{ __('attributes.vat_no') }}: {{ $legalInfo->vat_no }}</div>
-        <div>{{ __('attributes.swift_bic') }}: {{ $legalInfo->swift_bic }}</div>
-        <div>{{ __('attributes.iban') }}: {{ $legalInfo->iban }}</div>
-    </div>
+    <table>
+        <tr>
+            <td class="left">
+                <div>{{ __('attributes.registry_court') }}: {{ $legalInfo->registry_court }}</div>
+                <div>{{ __('attributes.registry_no') }}: {{ $legalInfo->registry_no }}</div>
+                <div>{{ __('attributes.company_owner') }}: {{ $legalInfo->company_owner }}</div>
+            </td>
+            <td class="right">
+                <div>{{ __('attributes.tax_no') }}: {{ $legalInfo->tax_no }}</div>
+                <div>{{ __('attributes.vat_no') }}: {{ $legalInfo->vat_no }}</div>
+                <div>{{ __('attributes.swift_bic') }}: {{ $legalInfo->swift_bic }}</div>
+                <div>{{ __('attributes.iban') }}: {{ $legalInfo->iban }}</div>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <x-pdf.customer-address :customer="$customer" />
