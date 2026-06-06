@@ -27,28 +27,12 @@ class TemplateServiceProvider extends ServiceProvider
                 )
             );
 
-            $templateManager->register(
-                templateKey: 'invoice.pdf',
-                template: new BladeInvoiceTemplate(
-                    tenant: 'goerzwerk',
-                    view: 'goerzwerk.pdf.invoice'
-                )
-            );
-
             // Cancellation Invoice PDF
             $templateManager->register(
                 templateKey: 'invoice-cancellation.pdf',
                 template: new BladeInvoiceTemplate(
                     tenant: TemplateManager::DEFAULT_TENANT,
                     view: 'default.invoices.cancelled-invoice-pdf'
-                )
-            );
-
-            $templateManager->register(
-                templateKey: 'invoice-cancellation.pdf',
-                template: new BladeInvoiceTemplate(
-                    tenant: 'goerzwerk',
-                    view: 'goerzwerk.pdf.invoice-cancellation'
                 )
             );
 
@@ -59,20 +43,9 @@ class TemplateServiceProvider extends ServiceProvider
             );
 
             $templateManager->register(
-                templateKey: 'invoice.email',
-                template: new BladeTemplate(tenant: 'goerzwerk', view: 'goerzwerk.mail.invoice')
-            );
-
-            $templateManager->register(
                 templateKey: 'invoice-cancellation.email',
                 template: new BladeTemplate(tenant: TemplateManager::DEFAULT_TENANT, view: 'default.emails.invoice-cancellation-mail')
             );
-
-            $templateManager->register(
-                templateKey: 'invoice-cancellation.email',
-                template: new BladeTemplate(tenant: 'goerzwerk', view: 'goerzwerk.mail.invoice-cancellation')
-            );
-
 
             return $templateManager;
         });

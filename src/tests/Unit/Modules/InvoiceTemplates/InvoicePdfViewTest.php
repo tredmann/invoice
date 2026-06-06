@@ -33,23 +33,6 @@ class InvoicePdfViewTest extends TestCase
         self::assertStringContainsString('counter(page)', $html);
     }
 
-    public function testGoerzwerkInvoicePdfCompilesAndContainsRequiredFields(): void
-    {
-        $html = $this->renderInvoiceView('goerzwerk.pdf.invoice');
-
-        self::assertStringContainsString('@page', $html);
-        self::assertStringContainsString('counter(page)', $html);
-    }
-
-    public function testGoerzwerkCancellationInvoicePdfCompilesAndContainsRequiredFields(): void
-    {
-        $html = $this->renderInvoiceView('goerzwerk.pdf.invoice-cancellation');
-
-        self::assertStringContainsString('@page', $html);
-        self::assertStringContainsString('counter(page)', $html);
-        self::assertStringContainsString('Stornierung', $html);
-    }
-
     private function renderInvoiceView(string $view): string
     {
         $tenant = $this->makeTenantWithEverything();
