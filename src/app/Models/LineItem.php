@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\UnitCodeCast;
 use App\Enums\UnitCode;
 use App\Services\Invoices\InvoiceService;
 use App\Traits\HasUuid;
@@ -104,7 +105,7 @@ class LineItem extends Model
     protected function casts(): array
     {
         return [
-            'unit' => UnitCode::class,
+            'unit' => UnitCodeCast::class,
         ];
     }
 }
