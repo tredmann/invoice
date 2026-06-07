@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
         // Individual tests that want the real ZugferdService must resolve it
         // explicitly (e.g. app(ZugferdService::class) after binding their own).
         $this->app->bind(ZugferdService::class, function () {
-            $stub = $this->createMock(ZugferdService::class);
+            $stub = $this->createStub(ZugferdService::class);
             $stub->method('embed')->willReturnArgument(1);
 
             return $stub;

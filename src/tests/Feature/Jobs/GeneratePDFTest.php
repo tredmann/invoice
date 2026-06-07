@@ -260,7 +260,7 @@ class GeneratePDFTest extends TestCase
      */
     private function passthroughZugferd(): ZugferdService
     {
-        $mock = $this->createMock(ZugferdService::class);
+        $mock = $this->createStub(ZugferdService::class);
         $mock->method('embed')->willReturnArgument(1);
 
         return $mock;
