@@ -116,7 +116,9 @@ class ZugferdServiceTest extends TestCase
         $invoice = $invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']);
 
         $service = new ZugferdService();
-        $result = $service->embed($invoice, file_get_contents(base_path('tests/Fixtures/plain.pdf')));
+        $pdf = file_get_contents(base_path('tests/Fixtures/plain.pdf'));
+        self::assertNotFalse($pdf, 'Fixture tests/Fixtures/plain.pdf not found');
+        $result = $service->embed($invoice, $pdf);
         $xml = ZugferdDocumentPdfReader::getXmlFromContent($result);
 
         // EN 16931 reduced rate category 'AA' must appear
@@ -131,7 +133,9 @@ class ZugferdServiceTest extends TestCase
         $invoice = $invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']);
 
         $service = new ZugferdService();
-        $result = $service->embed($invoice, file_get_contents(base_path('tests/Fixtures/plain.pdf')));
+        $pdf = file_get_contents(base_path('tests/Fixtures/plain.pdf'));
+        self::assertNotFalse($pdf, 'Fixture tests/Fixtures/plain.pdf not found');
+        $result = $service->embed($invoice, $pdf);
         $xml = ZugferdDocumentPdfReader::getXmlFromContent($result);
 
         // No STAN_RATE for zero-rate items
