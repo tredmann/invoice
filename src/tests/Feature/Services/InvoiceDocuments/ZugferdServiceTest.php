@@ -126,6 +126,25 @@ class ZugferdServiceTest extends TestCase
         self::assertStringNotContainsString('<ram:CategoryCode>S</ram:CategoryCode>', $xml);
     }
 
+    public function testCancellationInvoiceDuePayableAmountIsZero(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->update(['status' => Invoice::STATUS_CANCELLATION_INVOICE]);
+        $invoice = $invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']);
+
+        $service = new ZugferdService();
+        $pdf = file_get_contents(base_path('tests/Fixtures/plain.pdf'));
+        self::assertNotFalse($pdf, 'Fixture tests/Fixtures/plain.pdf not found');
+        $result = $service->embed($invoice, $pdf);
+
+        $xml = \horstoeko\zugferd\ZugferdDocumentPdfReader::getXmlFromContent($result);
+        // DuePayableAmount in ZUGFeRD XML should be 0.00 for a credit note
+        self::assertMatchesRegularExpression(
+            '/<ram:DuePayableAmount>0\.00<\/ram:DuePayableAmount>/',
+            $xml
+        );
+    }
+
     public function testEmbedUsesZeroRateCategoryForZeroPercentVat(): void
     {
         $invoice = $this->makeFullyConfiguredInvoice();

@@ -121,7 +121,7 @@ class ZugferdService
         $this->applyBuyer($documentBuilder, $invoice);
         $this->applyPayment($documentBuilder, $invoice, $legalInfo);
         $this->applyLineItems($documentBuilder, $invoice);
-        $this->applyTotals($documentBuilder, $invoice);
+        $this->applyTotals($documentBuilder, $invoice, $isCredit);
 
         return $documentBuilder;
     }
@@ -217,7 +217,7 @@ class ZugferdService
         }
     }
 
-    private function applyTotals(ZugferdDocumentBuilder $builder, Invoice $invoice): void
+    private function applyTotals(ZugferdDocumentBuilder $builder, Invoice $invoice, bool $isCredit): void
     {
         $netByRate = [];
         $taxByRate = [];
@@ -245,11 +245,12 @@ class ZugferdService
 
         $lineTotal = $this->centsToAmount((int) $invoice->total_without_tax);
         $grandTotal = $this->centsToAmount((int) $invoice->total_with_tax);
-        $taxTotal = round($grandTotal - $lineTotal, 2);
+        $taxTotal = round(array_sum($taxByRate), 2);
+        $duePayableAmount = $isCredit ? 0.0 : $grandTotal;
 
         $builder->setDocumentSummation(
             $grandTotal,
-            $grandTotal,
+            $duePayableAmount,
             $lineTotal,
             0.0,
             0.0,
