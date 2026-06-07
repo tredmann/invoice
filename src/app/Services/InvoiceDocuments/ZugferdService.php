@@ -119,7 +119,9 @@ class ZugferdService
 
         $this->applySeller($documentBuilder, $generalInfo, $legalInfo);
         $this->applyBuyer($documentBuilder, $invoice);
-        $this->applyPayment($documentBuilder, $invoice, $legalInfo);
+        if (!$isCredit) {
+            $this->applyPayment($documentBuilder, $invoice, $legalInfo);
+        }
         $this->applyLineItems($documentBuilder, $invoice);
         $this->applyTotals($documentBuilder, $invoice, $isCredit);
 

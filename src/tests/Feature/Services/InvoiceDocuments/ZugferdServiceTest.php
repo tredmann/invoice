@@ -175,6 +175,21 @@ class ZugferdServiceTest extends TestCase
         (new ZugferdService())->embed($invoice, $pdf);
     }
 
+    public function testCancellationInvoiceWithNullDueDateDoesNotThrow(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->update(['status' => Invoice::STATUS_CANCELLATION_INVOICE, 'date_due' => null]);
+        $invoice = $invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']);
+
+        $pdf = file_get_contents(base_path('tests/Fixtures/plain.pdf'));
+        self::assertNotFalse($pdf, 'Fixture tests/Fixtures/plain.pdf not found');
+
+        // Should not throw — credit notes don't require a due date
+        $result = (new ZugferdService())->embed($invoice, $pdf);
+        self::assertIsString($result);
+        self::assertNotEmpty($result);
+    }
+
     private function makeFullyConfiguredInvoice(): Invoice
     {
         $tenant = $this->makeTenantWithEverything();
