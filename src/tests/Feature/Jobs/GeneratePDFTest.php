@@ -173,7 +173,7 @@ class GeneratePDFTest extends TestCase
             'swift_bic' => 'COBADEFFXXX',
         ]);
 
-        $invoice = Invoice::factory()->for($customer)->open()->create();
+        $invoice = Invoice::factory()->for($customer)->open()->create(['currency' => 'EUR']);
 
         // Add a line item with a valid UnitCode so ZugferdService can build positions.
         LineItem::create([
