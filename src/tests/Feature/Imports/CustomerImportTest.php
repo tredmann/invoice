@@ -35,6 +35,7 @@ class CustomerImportTest extends TestCase
         self::assertSame('Main 1', $customer->street);
         self::assertSame('10115', $customer->postal);
         self::assertSame('Berlin', $customer->city);
+        self::assertSame('DE', $customer->country);
     }
 
     public function testOmitsLeadingSpaceWhenPrefixColumnsAreNull(): void

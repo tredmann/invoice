@@ -100,7 +100,8 @@ class CustomerController extends Controller
             'name' => 'nullable|string|max:50',
             'street' => 'required|string|max:100',
             'postal' => 'required|string|max:5',
-            'city' => 'required|string|max:100'
+            'city' => 'required|string|max:100',
+            'country' => 'required|string|max:2|in:DE',
         ];
 
         if (Setting::isEnabled($tenant, Settings::EDIT_CUSTOMER_ID)) {

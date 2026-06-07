@@ -42,6 +42,7 @@ class CustomerService
             'street' => $customer->street,
             'postal' => $customer->postal,
             'city' => $customer->city,
+            'country' => $customer->country,
         ];
     }
 }
