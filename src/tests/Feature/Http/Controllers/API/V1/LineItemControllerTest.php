@@ -79,4 +79,16 @@ class LineItemControllerTest extends TestCase
             $this->tenant->route('api.v1.lineItems.destroy', ['lineItem' => $this->lineItem]),
         )->assertNoContent();
     }
+
+    public function testLineItemUnitIsSerializedAsString(): void
+    {
+        $response = $this->getJson(
+            $this->tenant->route('api.v1.invoices.lineItems', ['invoice' => $this->invoice]),
+        )->assertOk();
+
+        $unit = $response->json('data.lineItems.0.unit');
+
+        $this->assertIsString($unit);
+        $this->assertSame($this->lineItem->unit->value, $unit);
+    }
 }

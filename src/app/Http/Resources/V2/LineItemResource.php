@@ -22,7 +22,7 @@ class LineItemResource extends JsonResource
             'without_tax' => $this->without_tax,
             'tax_rate' => $this->tax_rate,
             'with_tax' => $this->with_tax,
-            'unit' => $this->unit,
+            'unit' => $this->unit->value,
             'detail' => $this->detail,
             'detail_plus' => $this->detail_plus,
         ];

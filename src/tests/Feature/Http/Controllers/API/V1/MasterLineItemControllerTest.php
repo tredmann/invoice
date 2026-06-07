@@ -79,4 +79,16 @@ class MasterLineItemControllerTest extends TestCase
             $this->tenant->route('api.v1.masterLineItems.destroy', ['masterLineItem' => $this->masterLineItem]),
         )->assertNoContent();
     }
+
+    public function testMasterLineItemUnitIsSerializedAsString(): void
+    {
+        $response = $this->getJson(
+            route('api.v1.masterInvoices.masterLineItems', ['tenant' => $this->tenant, 'masterInvoice' => $this->masterInvoice]),
+        )->assertOk();
+
+        $unit = $response->json('data.masterLineItems.0.unit');
+
+        $this->assertIsString($unit);
+        $this->assertSame($this->masterLineItem->unit->value, $unit);
+    }
 }

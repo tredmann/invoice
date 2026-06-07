@@ -20,7 +20,7 @@ class MasterLineItemResource extends JsonResource
             'quantity' => $this->quantity,
             'price_each' => $this->price_each,
             'tax_rate' => $this->tax_rate,
-            'unit' => $this->unit,
+            'unit' => $this->unit->value,
             'detail' => $this->detail,
             'detail_plus' => $this->detail_plus,
         ];

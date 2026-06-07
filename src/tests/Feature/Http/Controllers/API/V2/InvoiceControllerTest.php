@@ -396,4 +396,15 @@ class InvoiceControllerTest extends \Tests\TestCase
 
         $response->assertStatus(200);
     }
+
+    public function testLineItemUnitIsSerializedAsString(): void
+    {
+        $response = $this->postJson('http://localhost:8080/api/v2/tenant/'.$this->tenant->id.'/invoices', $this->body);
+        $response->assertStatus(200);
+
+        $unit = $response->json('lines.0.unit');
+
+        $this->assertIsString($unit);
+        $this->assertSame(UnitCode::Piece->value, $unit);
+    }
 }
