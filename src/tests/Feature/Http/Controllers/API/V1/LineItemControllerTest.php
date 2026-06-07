@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\API\V1;
 
+use App\Enums\UnitCode;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\LineItem;
@@ -42,7 +43,7 @@ class LineItemControllerTest extends TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
             'currency' => $this->invoice->currency,
@@ -61,7 +62,7 @@ class LineItemControllerTest extends TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
             'currency' => $this->invoice->currency,

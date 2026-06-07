@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\API\V1;
 
+use App\Enums\UnitCode;
 use App\Models\Customer;
 use App\Models\MasterInvoice;
 use App\Models\MasterLineItem;
@@ -42,7 +43,7 @@ class MasterLineItemControllerTest extends TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
             'currency' => $this->masterInvoice->currency,
@@ -61,7 +62,7 @@ class MasterLineItemControllerTest extends TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
             'currency' => $this->masterInvoice->currency,

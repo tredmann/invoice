@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Jobs;
 
+use App\Enums\UnitCode;
 use App\Jobs\GeneratePDF;
 use App\Models\Invoice;
 use App\Models\InvoiceDocument;
@@ -106,7 +107,7 @@ class GeneratePDFTest extends TestCase
             'without_tax' => 1000,
             'tax_rate' => 0.19,
             'with_tax' => 1190,
-            'unit' => 'h',
+            'unit' => UnitCode::Hour->value,
             'detail' => 'smoke',
         ]);
 

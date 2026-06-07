@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Modules\InvoiceTemplates;
 
+use App\Enums\UnitCode;
 use App\Models\Invoice;
 use App\Models\LineItem;
 use App\Models\UniqueNumber;
@@ -48,7 +49,7 @@ class InvoicePdfViewTest extends TestCase
             'without_tax' => 1000,
             'tax_rate' => 0.19,
             'with_tax' => 1190,
-            'unit' => 'h',
+            'unit' => UnitCode::Hour->value,
             'detail' => 'smoke',
         ]);
 

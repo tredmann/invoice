@@ -243,7 +243,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td class="num">{{ str_replace('.', ',', $lineItem->quantity) }}</td>
                 <td class="num">-@money($lineItem->price_each, $lineItem->currency)</td>
-                <td>{{ $lineItem->unit }}</td>
+                <td>{{ $lineItem->unit->label() }}</td>
                 <td>
                     <p class="thick">{{ $lineItem->detail }}</p>
                     <p>{{ $lineItem->detail_plus }}</p>

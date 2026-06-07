@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UnitCode;
 use App\Services\MasterInvoices\MasterInvoiceService;
 use App\Traits\HasUuid;
 use App\Traits\TracksUser;
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $without_tax
  * @property float $tax_rate
  * @property int $with_tax
- * @property string|null $unit
+ * @property UnitCode $unit
  * @property string $detail
  * @property string|null $detail_plus
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -94,4 +95,16 @@ class MasterLineItem extends Model
         'detail',
         'detail_plus',
     ];
+    /**
+     * The attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'unit' => UnitCode::class,
+        ];
+    }
 }

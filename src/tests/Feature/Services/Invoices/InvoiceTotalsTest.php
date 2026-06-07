@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services\Invoices;
 
+use App\Enums\UnitCode;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\LineItem;
@@ -41,7 +42,7 @@ class InvoiceTotalsTest extends TestCase
             'without_tax' => (int) round($priceCents * $quantity),
             'tax_rate' => $taxRate,
             'with_tax' => (int) round(($priceCents * $quantity) * (1 + $taxRate)),
-            'unit' => 'h',
+            'unit' => UnitCode::Hour->value,
             'detail' => 'work',
         ]);
     }

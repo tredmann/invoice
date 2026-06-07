@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Demo;
 
+use App\Enums\UnitCode;
 use App\Models\Customer;
 use App\Models\CustomerMailReceiver;
 use App\Models\Invoice;
@@ -158,40 +159,40 @@ class NorthwindCreativeSeeder extends Seeder
         $definitions = [
             // 1. Sunfire Coffee — Draft
             ['state' => 'draft', 'customer' => 'Sunfire Coffee Co.',
-             'line_items' => [['quantity' => 1, 'unit' => 'project', 'price_each' => 350000, 'tax_rate' => 0, 'detail' => 'Brand refresh proposal']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 350000, 'tax_rate' => 0, 'detail' => 'Brand refresh proposal']]],
             // 2. Sunfire Coffee — Paid
             ['state' => 'paid', 'customer' => 'Sunfire Coffee Co.', 'mail_status' => Invoice::MAIL_STATUS_MAILED,
              'opened_days_ago' => 45, 'days_till_due' => 14, 'paid_days_ago' => 28, 'performed_when' => 'April 2026',
-             'line_items' => [['quantity' => 1, 'unit' => 'project', 'price_each' => 280000, 'tax_rate' => 0, 'detail' => 'Logo redesign and brand mark']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 280000, 'tax_rate' => 0, 'detail' => 'Logo redesign and brand mark']]],
             // 3. Linden & Quill — Open (3 line items)
             ['state' => 'open', 'customer' => 'Linden & Quill, LLC', 'mail_status' => Invoice::MAIL_STATUS_MAILED,
              'opened_days_ago' => 6, 'days_till_due' => 14, 'performed_when' => 'May 2026',
              'line_items' => [
-                 ['quantity' => 1, 'unit' => 'cover', 'price_each' => 120000, 'tax_rate' => 0, 'detail' => 'Cover design — "The Long Quiet"'],
-                 ['quantity' => 1, 'unit' => 'cover', 'price_each' => 120000, 'tax_rate' => 0, 'detail' => 'Cover design — "Northbound"'],
-                 ['quantity' => 1, 'unit' => 'cover', 'price_each' => 120000, 'tax_rate' => 0, 'detail' => 'Cover design — "Field Notes"'],
+                 ['quantity' => 1, 'unit' => UnitCode::Piece->value, 'price_each' => 120000, 'tax_rate' => 0, 'detail' => 'Cover design — "The Long Quiet"'],
+                 ['quantity' => 1, 'unit' => UnitCode::Piece->value, 'price_each' => 120000, 'tax_rate' => 0, 'detail' => 'Cover design — "Northbound"'],
+                 ['quantity' => 1, 'unit' => UnitCode::Piece->value, 'price_each' => 120000, 'tax_rate' => 0, 'detail' => 'Cover design — "Field Notes"'],
              ]],
             // 4. Halcyon Yoga Studio — Open
             ['state' => 'open', 'customer' => 'Halcyon Yoga Studio', 'mail_status' => Invoice::MAIL_STATUS_MAILED,
              'opened_days_ago' => 10, 'days_till_due' => 14, 'performed_when' => 'May 2026',
-             'line_items' => [['quantity' => 1, 'unit' => 'project', 'price_each' => 220000, 'tax_rate' => 0, 'detail' => 'Web design — Halcyon Yoga Studio landing page']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 220000, 'tax_rate' => 0, 'detail' => 'Web design — Halcyon Yoga Studio landing page']]],
             // 5. Halcyon Yoga Studio — Overdue
             ['state' => 'overdue', 'customer' => 'Halcyon Yoga Studio', 'mail_status' => Invoice::MAIL_STATUS_MAILED,
              'opened_days_ago' => 28, 'days_till_due' => 14, 'performed_when' => 'April 2026',
-             'line_items' => [['quantity' => 1, 'unit' => 'project', 'price_each' => 95000, 'tax_rate' => 0, 'detail' => 'Brand guidelines document']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 95000, 'tax_rate' => 0, 'detail' => 'Brand guidelines document']]],
             // 6. Maple Leaf Marketing — Open, cross-border
             ['state' => 'open', 'customer' => 'Maple Leaf Marketing', 'mail_status' => Invoice::MAIL_STATUS_MAILABLE,
              'opened_days_ago' => 3, 'days_till_due' => 14, 'performed_when' => 'May 2026',
-             'line_items' => [['quantity' => 1, 'unit' => 'project', 'price_each' => 180000, 'tax_rate' => 0, 'detail' => 'Illustration project (set of 6)']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 180000, 'tax_rate' => 0, 'detail' => 'Illustration project (set of 6)']]],
             // 7. Linden & Quill — Cancelled
             ['state' => 'cancelled', 'customer' => 'Linden & Quill, LLC',
              'opened_days_ago' => 40, 'days_till_due' => 14, 'performed_when' => 'April 2026',
-             'line_items' => [['quantity' => 1, 'unit' => 'project', 'price_each' => 240000, 'tax_rate' => 0, 'detail' => 'Cover series (cancelled, project scope changed)']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 240000, 'tax_rate' => 0, 'detail' => 'Cover series (cancelled, project scope changed)']]],
             // 8. Linden & Quill — Cancellation Invoice (paired with 7)
             ['state' => 'cancellation_invoice', 'customer' => 'Linden & Quill, LLC',
              'cancelled_pair_with' => 6, // zero-indexed: definition #7 is index 6
              'opened_days_ago' => 38, 'days_till_due' => 14, 'performed_when' => 'April 2026 (cancellation)',
-             'line_items' => [['quantity' => 1, 'unit' => 'project', 'price_each' => 240000, 'tax_rate' => 0, 'detail' => 'Cancellation — Cover series']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 240000, 'tax_rate' => 0, 'detail' => 'Cancellation — Cover series']]],
         ];
 
         $createdInvoices = [];
@@ -299,9 +300,9 @@ class NorthwindCreativeSeeder extends Seeder
 
         $definitions = [
             ['customer' => 'Sunfire Coffee Co.', 'status' => 'active', 'frequency' => '1 month', 'next_print_days' => 10, 'days_till_due' => 14,
-             'line_items' => [['quantity' => 1, 'unit' => 'month', 'price_each' => 90000, 'tax_rate' => 0, 'detail' => 'Monthly social-media graphics retainer']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::Month->value, 'price_each' => 90000, 'tax_rate' => 0, 'detail' => 'Monthly social-media graphics retainer']]],
             ['customer' => 'Halcyon Yoga Studio', 'status' => 'paused', 'frequency' => '3 months', 'next_print_days' => null, 'days_till_due' => 14,
-             'line_items' => [['quantity' => 1, 'unit' => 'quarter', 'price_each' => 175000, 'tax_rate' => 0, 'detail' => 'Quarterly seasonal campaign (paused)']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::Month->value, 'price_each' => 175000, 'tax_rate' => 0, 'detail' => 'Quarterly seasonal campaign (paused)']]],
         ];
 
         foreach ($definitions as $def) {
