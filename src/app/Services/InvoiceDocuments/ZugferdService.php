@@ -181,6 +181,12 @@ class ZugferdService
             $legalInfo->swift_bic
         );
 
+        if ($invoice->date_due === null) {
+            throw new ZugferdGenerationException(
+                "Invoice #{$invoice->invoice_no}: cannot generate ZUGFeRD document — due date is not set."
+            );
+        }
+
         $dueDate = $invoice->date_due->toDateTime();
         $description = sprintf('Zahlbar bis %s', $dueDate->format('d.m.Y'));
 

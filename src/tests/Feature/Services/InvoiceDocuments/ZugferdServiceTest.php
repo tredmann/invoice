@@ -161,6 +161,20 @@ class ZugferdServiceTest extends TestCase
         self::assertStringNotContainsString('<ram:CategoryCode>S</ram:CategoryCode>', $xml);
     }
 
+    public function testEmbedThrowsWhenDueDateIsNull(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->update(['date_due' => null]);
+        $invoice = $invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']);
+
+        $this->expectException(ZugferdGenerationException::class);
+        $this->expectExceptionMessageMatches('/due date/i');
+
+        $pdf = file_get_contents(base_path('tests/Fixtures/plain.pdf'));
+        self::assertNotFalse($pdf, 'Fixture tests/Fixtures/plain.pdf not found');
+        (new ZugferdService())->embed($invoice, $pdf);
+    }
+
     private function makeFullyConfiguredInvoice(): Invoice
     {
         $tenant = $this->makeTenantWithEverything();
