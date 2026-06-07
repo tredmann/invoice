@@ -55,6 +55,20 @@ class ZugferdServiceTest extends TestCase
         $service->embed($invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']), $this->loadSamplePdfBytes());
     }
 
+    public function testEmbedThrowsWhenBuyerHasNoName(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->customer->company = '';
+        $invoice->customer->name = null;
+        $invoice->customer->save();
+
+        $service = new ZugferdService();
+
+        $this->expectException(ZugferdGenerationException::class);
+        $this->expectExceptionMessageMatches('/Customer has neither a company name nor a personal name/');
+        $service->embed($invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']), $this->loadSamplePdfBytes());
+    }
+
     public function testCancellationInvoiceProducesCreditNoteTypeCode(): void
     {
         $invoice = $this->makeFullyConfiguredInvoice();

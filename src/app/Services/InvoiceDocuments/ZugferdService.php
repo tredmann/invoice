@@ -137,9 +137,13 @@ class ZugferdService
     private function applyBuyer(ZugferdDocumentBuilder $builder, Invoice $invoice): void
     {
         $customer = $invoice->customer;
-        $buyerName = $customer->company !== ''
-            ? $customer->company
-            : (string) $customer->name;
+        $buyerName = trim((string) ($customer->company ?: $customer->name));
+
+        if ($buyerName === '') {
+            throw new ZugferdGenerationException(
+                "Invoice #{$invoice->invoice_no}: Customer has neither a company name nor a personal name. ZUGFeRD requires a buyer name (EN 16931 BT-44)."
+            );
+        }
 
         $builder->setDocumentBuyer($buyerName, $customer->customer_no);
         $builder->setDocumentBuyerAddress(
@@ -212,12 +216,14 @@ class ZugferdService
         }
 
         foreach ($netByRate as $key => $net) {
+            $rate = (float) $key;
+            $category = $rate > 0 ? ZugferdVatCategoryCodes::STAN_RATE : ZugferdVatCategoryCodes::ZERO_RATE_GOOD;
             $builder->addDocumentTax(
-                ZugferdVatCategoryCodes::STAN_RATE,
+                $category,
                 ZugferdVatTypeCodes::VALUE_ADDED_TAX,
                 round($net, 2),
                 round($taxByRate[$key], 2),
-                (float) $key
+                $rate
             );
         }
 
@@ -257,22 +263,11 @@ class ZugferdService
 
     private function resolveCountryCode(?string $country): string
     {
-        if ($country === null || $country === '') {
-            return ZugferdCountryCodes::GERMANY;
-        }
-
-        $trimmed = trim($country);
-
-        // Already an ISO 3166-1 alpha-2 code
-        if (strlen($trimmed) === 2 && ctype_alpha($trimmed)) {
-            return strtoupper($trimmed);
-        }
-
-        $normalized = mb_strtolower($trimmed);
-
-        return match ($normalized) {
-            'deutschland', 'germany' => ZugferdCountryCodes::GERMANY,
-            default => ZugferdCountryCodes::GERMANY,
+        return match (strtolower(trim((string) $country))) {
+            'de', 'deutschland', 'germany' => ZugferdCountryCodes::GERMANY,
+            default => throw new ZugferdGenerationException(
+                "Cannot map country '{$country}' to an ISO 3166-1 alpha-2 code for ZUGFeRD generation."
+            ),
         };
     }
 }
