@@ -11,6 +11,7 @@ use App\Modules\InvoiceTemplates\Models\TemplateManager;
 use App\Services\InvoiceDocuments\InvoiceDocumentService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Storage;
+use Spatie\LaravelPdf\Facades\Pdf;
 use Tests\Concerns\MakesTenants;
 use Tests\TestCase;
 
@@ -35,6 +36,7 @@ class GeneratePDFTest extends TestCase
     public function testMissingTenantTemplateFallsBackToDefault(): void
     {
         Storage::fake('local');
+        Pdf::fake();
 
         $tenant = $this->makeTenantWithEverything();
         $customer = $tenant->customers->first();
@@ -47,6 +49,8 @@ class GeneratePDFTest extends TestCase
             app(InvoiceDocumentService::class),
             app(TemplateManager::class),
         );
+
+        Pdf::assertViewIs('default.invoices.invoice-pdf');
 
         $invoice->refresh();
         self::assertSame(Invoice::MAIL_STATUS_MAILABLE, $invoice->mail_status);
@@ -82,6 +86,10 @@ class GeneratePDFTest extends TestCase
 
     public function testRealTemplateRenderingProducesPdfBytes(): void
     {
+        if (! $this->weasyprintIsAvailable()) {
+            self::markTestSkipped('weasyprint binary not on PATH — skipping real-binary smoke test');
+        }
+
         Storage::fake('local');
 
         $tenant = $this->makeTenantWithEverything();
@@ -113,6 +121,34 @@ class GeneratePDFTest extends TestCase
 
         $content = Storage::disk('local')->get($doc->path);
         self::assertStringStartsWith('%PDF-', $content, 'expected real PDF bytes');
+        self::assertGreaterThan(1000, strlen($content), 'expected a non-trivial PDF');
+    }
+
+    private function weasyprintIsAvailable(): bool
+    {
+        $output = [];
+        $status = 1;
+        @exec('command -v weasyprint 2>/dev/null', $output, $status);
+
+        return $status === 0 && $output !== [];
+    }
+
+    public function testRenderingGoesThroughSpatiePdfFacade(): void
+    {
+        Storage::fake('local');
+        Pdf::fake();
+
+        $tenant = $this->makeTenantWithEverything();
+        $customer = $tenant->customers->first();
+        $invoice = Invoice::factory()->for($customer)->open()->create();
+
+        (new GeneratePDF($invoice))->handle(
+            app(InvoiceDocumentService::class),
+            app(TemplateManager::class),
+        );
+
+        Pdf::assertViewIs('default.invoices.invoice-pdf');
+        Pdf::assertViewHas('invoice');
     }
 
     private function stubTemplate(string $key, string $tenantKey, string $content): Template

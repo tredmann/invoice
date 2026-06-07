@@ -54,3 +54,4 @@ Thumbs.db
 
 # Internal planning/spec documents — kept locally, excluded from public repo
 /docs/superpowers/
+/src/.playwright-cli

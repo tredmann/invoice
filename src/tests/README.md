@@ -33,7 +33,7 @@ Opt in with a `use` statement; do not add traits to `Tests\TestCase`.
 
 - Any test that touches PDF output: `Storage::fake('local')`.
 - Any test that touches mail: `Mail::fake()`.
-- One PDF smoke test in `Feature/Jobs/GeneratePDFTest.php` exercises the real dompdf renderer — all other PDF tests mock or fake.
+- One PDF smoke test in `Feature/Jobs/GeneratePDFTest.php` exercises the real weasyprint renderer (skipped when the binary is not on PATH) — all other PDF tests mock or fake.
 - No test should talk to real SMTP, real disk, or a real queue worker.
 
 ## Pinning vs fixing

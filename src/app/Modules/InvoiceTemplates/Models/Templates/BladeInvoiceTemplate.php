@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\InvoiceTemplates\Models\Templates;
 
 use App\Models\Invoice;
 use App\Models\UniqueNumber;
 use App\Services\Invoices\InvoiceService;
-use Barryvdh\DomPDF\PDF;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class BladeInvoiceTemplate implements Template
 {
@@ -24,15 +26,44 @@ class BladeInvoiceTemplate implements Template
         return $this->tenant;
     }
 
+    public function getView(): string
+    {
+        return $this->view;
+    }
+
     public function render(array $data): string
     {
-        $pdfRenderer = app(PDF::class);
+        $basePath = tempnam(sys_get_temp_dir(), 'invoice_pdf_');
 
-        $pdf = $pdfRenderer->loadView(
-            view: $this->view,
-            data: $this->prepareDataForView($data['invoice'])
-        );
-        return $pdf->output();
+        if ($basePath === false) {
+            throw new \RuntimeException('Failed to allocate tempfile for PDF render');
+        }
+
+        $tempPath = $basePath.'.pdf';
+
+        // Pre-create the .pdf file so file_get_contents always has a target.
+        // Under Pdf::fake(), FakePdfBuilder::save() does not write to disk;
+        // without this the subsequent file_get_contents call would return false.
+        // Under the real WeasyPrint driver, save() overwrites this stub.
+        touch($tempPath);
+
+        try {
+            Pdf::view($this->view, $this->prepareDataForView($data['invoice']))
+                ->save($tempPath);
+
+            $bytes = file_get_contents($tempPath);
+
+            if ($bytes === false) {
+                throw new \RuntimeException('Failed to read rendered PDF from '.$tempPath);
+            }
+
+            return $bytes;
+        } finally {
+            @unlink($basePath);
+            if (is_file($tempPath)) {
+                @unlink($tempPath);
+            }
+        }
     }
 
     /**
@@ -48,10 +79,5 @@ class BladeInvoiceTemplate implements Template
             'totalPerTax' => InvoiceService::totalPerTax($invoice->lineItems),
             'uniqueNumber' => new UniqueNumber(),
         ];
-    }
-
-    public function getView(): string
-    {
-        return $this->view;
     }
 }
