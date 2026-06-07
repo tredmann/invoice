@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\LineItem;
 use App\Services\InvoiceDocuments\ZugferdService;
+use horstoeko\zugferd\ZugferdDocumentPdfReader;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\MakesTenants;
 use Tests\TestCase;
@@ -106,6 +107,35 @@ class ZugferdServiceTest extends TestCase
         $this->expectException(ZugferdGenerationException::class);
         $this->expectExceptionMessageMatches('/Company Profile has an unrecognised country/');
         $service->embed($invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']), $this->loadSamplePdfBytes());
+    }
+
+    public function testEmbedUsesReducedRateCategoryForSevenPercentVat(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->lineItems()->update(['tax_rate' => 0.07]);
+        $invoice = $invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']);
+
+        $service = new ZugferdService();
+        $result = $service->embed($invoice, file_get_contents(base_path('tests/Fixtures/plain.pdf')));
+        $xml = ZugferdDocumentPdfReader::getXmlFromContent($result);
+
+        // EN 16931 reduced rate category 'AA' must appear
+        self::assertStringContainsString('AA', $xml);
+        self::assertStringNotContainsString('<ram:CategoryCode>S</ram:CategoryCode>', $xml);
+    }
+
+    public function testEmbedUsesZeroRateCategoryForZeroPercentVat(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->lineItems()->update(['tax_rate' => 0.00, 'with_tax' => \Illuminate\Support\Facades\DB::raw('without_tax')]);
+        $invoice = $invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']);
+
+        $service = new ZugferdService();
+        $result = $service->embed($invoice, file_get_contents(base_path('tests/Fixtures/plain.pdf')));
+        $xml = ZugferdDocumentPdfReader::getXmlFromContent($result);
+
+        // No STAN_RATE for zero-rate items
+        self::assertStringNotContainsString('<ram:CategoryCode>S</ram:CategoryCode>', $xml);
     }
 
     private function makeFullyConfiguredInvoice(): Invoice

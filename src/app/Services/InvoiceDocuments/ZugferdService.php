@@ -209,7 +209,7 @@ class ZugferdService
             $builder->setDocumentPositionNetPrice($unitPrice);
             $builder->setDocumentPositionQuantity($quantity, $unitCode);
             $builder->addDocumentPositionTax(
-                ZugferdVatCategoryCodes::STAN_RATE,
+                $this->resolveVatCategory($taxPercent),
                 ZugferdVatTypeCodes::VALUE_ADDED_TAX,
                 $taxPercent
             );
@@ -233,7 +233,7 @@ class ZugferdService
 
         foreach ($netByRate as $key => $net) {
             $rate = (float) $key;
-            $category = $rate > 0 ? ZugferdVatCategoryCodes::STAN_RATE : ZugferdVatCategoryCodes::ZERO_RATE_GOOD;
+            $category = $this->resolveVatCategory($rate);
             $builder->addDocumentTax(
                 $category,
                 ZugferdVatTypeCodes::VALUE_ADDED_TAX,
@@ -256,6 +256,19 @@ class ZugferdService
             $lineTotal,
             $taxTotal
         );
+    }
+
+    private function resolveVatCategory(float $taxPercent): string
+    {
+        if ($taxPercent <= 0.0) {
+            return ZugferdVatCategoryCodes::ZERO_RATE_GOOD;
+        }
+
+        if ($taxPercent < 15.0) {
+            return ZugferdVatCategoryCodes::LOWE_RATE;
+        }
+
+        return ZugferdVatCategoryCodes::STAN_RATE;
     }
 
     private function centsToAmount(int $cents): float
