@@ -36,7 +36,9 @@ class CustomerController extends Controller
      */
     public function store(CustomerRequest $request, Tenant $tenant): \App\Http\Resources\V1\CustomerResource
     {
-        $customer = $this->customerService->store($request->validated(), $tenant);
+        $data = $request->validated();
+        $data['country'] ??= 'DE';
+        $customer = $this->customerService->store($data, $tenant);
 
         return $this->show($tenant, $customer);
     }
@@ -54,7 +56,9 @@ class CustomerController extends Controller
      */
     public function update(CustomerRequest $request, Tenant $tenant, Customer $customer): \App\Http\Resources\V1\CustomerResource
     {
-        $customer->update($request->validated());
+        $data = $request->validated();
+        $data['country'] ??= 'DE';
+        $customer->update($data);
 
         return $this->show($tenant, $customer);
     }

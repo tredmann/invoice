@@ -28,7 +28,7 @@ class CustomerRequest extends FormRequest
             'street' => 'required|string|max:100',
             'postal' => 'required|string|max:5',
             'city' => 'required|string|max:100',
-            'country' => 'required|string|max:2|in:DE',
+            'country' => 'nullable|string|max:2|in:DE',
         ];
     }
 }

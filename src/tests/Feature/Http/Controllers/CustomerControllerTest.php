@@ -115,7 +115,7 @@ class CustomerControllerTest extends TestCase
         $this->assertDatabaseHas('customers', ['country' => 'DE', 'company' => $request['company']]);
     }
 
-    public function testStorePostRouteFailsWhenCountryMissing()
+    public function testStorePostRouteWithoutCountryDefaultsToDE()
     {
         $request = Customer::factory()
             ->make(['tenant_id' => $this->tenant->id])
@@ -125,7 +125,9 @@ class CustomerControllerTest extends TestCase
 
         $this->actingAs($this->user, 'web')
             ->post('http://localhost:8080/'.$this->tenant->id.'/customers', $request)
-            ->assertSessionHasErrors('country');
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('customers', ['country' => 'DE', 'company' => $request['company']]);
     }
 
     public function testStorePostRouteFailsWhenCountryInvalid()

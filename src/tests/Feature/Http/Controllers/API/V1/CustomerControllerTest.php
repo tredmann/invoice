@@ -52,4 +52,24 @@ class CustomerControllerTest extends TestCase
 
         $this->delete($this->tenant->route('api.v1.customers.destroy', ['customer' => $customer]))->assertNoContent();
     }
+
+    public function testStoreCustomerWithoutCountryDefaultsToDE(): void
+    {
+        $payload = [
+            'company' => 'Test GmbH',
+            'name'    => null,
+            'street'  => 'Teststraße 1',
+            'postal'  => '12345',
+            'city'    => 'Berlin',
+            // intentionally omit 'country'
+        ];
+
+        $response = $this->postJson(route('api.v1.customers.store', ['tenant' => $this->tenant]), $payload);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('customers', [
+            'company' => 'Test GmbH',
+            'country' => 'DE',
+        ]);
+    }
 }
