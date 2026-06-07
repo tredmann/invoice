@@ -82,6 +82,32 @@ class ZugferdServiceTest extends TestCase
         self::assertStringContainsString('381', $result);
     }
 
+    public function testEmbedThrowsForNonEurCurrency(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->currency = 'USD';
+        $invoice->save();
+
+        $service = new ZugferdService();
+
+        $this->expectException(ZugferdGenerationException::class);
+        $this->expectExceptionMessageMatches('/ZUGFeRD documents require EUR currency/');
+        $service->embed($invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']), $this->loadSamplePdfBytes());
+    }
+
+    public function testEmbedThrowsForUnknownCompanyCountry(): void
+    {
+        $invoice = $this->makeFullyConfiguredInvoice();
+        $invoice->customer->tenant->currentGeneralInfo->country = 'Österreich';
+        $invoice->customer->tenant->currentGeneralInfo->save();
+
+        $service = new ZugferdService();
+
+        $this->expectException(ZugferdGenerationException::class);
+        $this->expectExceptionMessageMatches('/Company Profile has an unrecognised country/');
+        $service->embed($invoice->fresh(['customer.tenant.currentLegalInfo', 'customer.tenant.currentGeneralInfo', 'lineItems']), $this->loadSamplePdfBytes());
+    }
+
     private function makeFullyConfiguredInvoice(): Invoice
     {
         $tenant = $this->makeTenantWithEverything();

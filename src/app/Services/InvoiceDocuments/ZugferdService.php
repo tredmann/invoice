@@ -43,6 +43,22 @@ class ZugferdService
             );
         }
 
+        $firstLineItem = $invoice->lineItems->first();
+        $currency = $invoice->currency ?? ($firstLineItem !== null ? $firstLineItem->currency : null);
+        if ($currency !== 'EUR') {
+            throw new ZugferdGenerationException(
+                "Invoice #{$invoice->invoice_no}: ZUGFeRD documents require EUR currency (got '{$currency}'). Non-EUR invoices cannot be issued as ZUGFeRD EN 16931 documents."
+            );
+        }
+
+        try {
+            $this->resolveCountryCode($generalInfo->country ?? '');
+        } catch (ZugferdGenerationException) {
+            throw new ZugferdGenerationException(
+                "Company Profile has an unrecognised country '{$generalInfo->country}'. Set it to a supported value (e.g. 'DE' or 'Deutschland') before generating a ZUGFeRD document."
+            );
+        }
+
         try {
             $documentBuilder = $this->buildDocument($invoice, $legalInfo, $generalInfo);
 
