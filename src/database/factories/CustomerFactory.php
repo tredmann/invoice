@@ -31,6 +31,7 @@ class CustomerFactory extends Factory
             'street' => $this->faker->streetAddress,
             'postal' => $this->faker->postcode,
             'city' => $this->faker->city,
+            'country' => 'DE',
         ];
     }
 }

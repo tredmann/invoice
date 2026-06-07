@@ -17,6 +17,7 @@ return [
     'street' => 'Street',
     'postal' => 'Postal',
     'city' => 'City',
+    'country' => 'Country',
     'created_at' => 'Created at',
     'updated_at' => 'Updated at',
 

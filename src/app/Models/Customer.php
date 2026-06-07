@@ -30,6 +30,7 @@ use Illuminate\Support\Collection;
  * @property string $street
  * @property string $postal
  * @property string $city
+ * @property string $country
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read int|null $invoices_count
@@ -86,7 +87,7 @@ class Customer extends Model
      * @var list<string>
      */
     #[\Override]
-    protected $fillable = ['customer_no', 'tenant_id', 'user_id', 'company', 'name', 'street', 'postal', 'city'];
+    protected $fillable = ['customer_no', 'tenant_id', 'user_id', 'company', 'name', 'street', 'postal', 'city', 'country'];
 
     /**
      * @return array<string, string>

@@ -17,6 +17,7 @@ return [
     'street' => 'Straße',
     'postal' => 'Postleitzahl',
     'city' => 'Stadt',
+    'country' => 'Land',
     'created_at' => 'erstellt',
     'updated_at' => 'zuletzt aktualisiert',
 

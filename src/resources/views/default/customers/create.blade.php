@@ -69,6 +69,18 @@
                 </div>
             </div>
 
+            <!-- Country -->
+            <div class="field">
+                <label for="country" class="label">{{ __('customers.country') }}</label>
+                <div class="control">
+                    <div class="select">
+                        <select id="country" name="country" required>
+                            <option value="DE" {{ old('country', 'DE') === 'DE' ? 'selected' : '' }}>Deutschland</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <section id="button_section" class="mt-6">
                 <div class="mt-5 is-flex is-justify-content-space-between is-align-items-center">
                     <!-- Cancel -->
