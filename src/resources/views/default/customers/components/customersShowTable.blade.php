@@ -43,6 +43,14 @@
         </tr>
         <tr>
             <td class="fit has-text-weight-bold">
+                {{ __('attributes.country') }}
+            </td>
+            <td>
+                {{$customer->country}}
+            </td>
+        </tr>
+        <tr>
+            <td class="fit has-text-weight-bold">
                 {{ __('attributes.created_at') }}
             </td>
             <td>

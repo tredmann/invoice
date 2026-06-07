@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UnitCode;
 use App\Models\MasterInvoice;
 use App\Models\MasterLineItem;
 use App\Models\Money;
@@ -29,7 +30,7 @@ class MasterLineItemFactory extends Factory
             'without_tax' => $withoutTax = LineItemProcessorService::calcWithoutTax($priceEach, $quantity),
             'tax_rate' => $tax_rate = $this->faker->randomElement(Money::DE_TAX_RATES),
             'with_tax' => LineItemProcessorService::calcWithTax($withoutTax, $tax_rate),
-            'unit' => $this->faker->word,
+            'unit' => $this->faker->randomElement(UnitCode::cases())->value,
             'detail' => $this->faker->words(3, true),
             'detail_plus' => $this->faker->sentences(1, true),
         ];

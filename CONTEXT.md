@@ -73,6 +73,9 @@ The legal and banking details of a Company: registry court, registry number, tax
 ## Invoice Document
 The generated PDF rendering of an Invoice, stored as the authoritative version. A type of file associated with an Invoice. Called `InvoiceDocument` with type `invoice_document` in the code.
 
+## ZUGFeRD Document
+A PDF/A-3 file that embeds a structured ZUGFeRD-compliant XML payload alongside the human-readable Invoice rendering. Satisfies German and EU electronic invoicing requirements (EN 16931). When a ZUGFeRD Document exists for an Invoice, it supersedes the plain Invoice Document as the file sent to Customers and used for accounting export.
+
 ## Attachment
 An additional file associated with an Invoice, sent alongside the Invoice Document when emailing. A type of file associated with an Invoice. Called `InvoiceDocument` with type `attachment` in the code.
 

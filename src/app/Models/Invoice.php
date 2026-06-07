@@ -25,7 +25,7 @@ use Illuminate\Support\Collection;
  * @property int $user_id
  * @property string $performed_when
  * @property int $days_till_due
- * @property Carbon $date_due
+ * @property Carbon|null $date_due
  * @property string $status
  * @property string $mail_status
  * @property Carbon $paid_at

@@ -48,6 +48,7 @@ class CustomerImport implements ToModel
             'street' => $street,
             'postal' => $postal,
             'city' => $city,
+            'country' => 'DE',
         ]);
     }
 }

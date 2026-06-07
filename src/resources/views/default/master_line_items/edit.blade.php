@@ -77,10 +77,15 @@
             <div class="field">
                 <label for="unit" class="label">{{ __('attributes.unit') }}</label>
                 <div class="control">
-                    <input id="unit" name="unit" type="text"
-                           class="input"
-                           value="{{old('unit') ?? $masterLineItem->unit}}"
-                           placeholder="{{ __('translate.optional') }}">
+                    <div class="select is-fullwidth">
+                        <select id="unit" name="unit" required>
+                            @foreach(\App\Enums\UnitCode::cases() as $code)
+                                <option value="{{ $code->value }}" {{ (old('unit') ?? $masterLineItem->unit->value) === $code->value ? 'selected' : '' }}>
+                                    {{ $code->label() }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 

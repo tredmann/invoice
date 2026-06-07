@@ -11,6 +11,7 @@ class CustomerService
     public static function store(CustomerRequest $request, Tenant $tenant): Customer
     {
         $input = $request->validated();
+        $input['country'] ??= 'DE';
         $customer = new Customer($input);
         $customer->tenant()->associate($tenant);
         $customer->save();

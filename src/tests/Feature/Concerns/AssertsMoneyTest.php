@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Concerns;
 
+use App\Enums\UnitCode;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\LineItem;
@@ -48,7 +49,7 @@ class AssertsMoneyTest extends TestCase
             'without_tax' => 2000,
             'tax_rate' => 0.19,
             'with_tax' => 2380,
-            'unit' => 'h',
+            'unit' => UnitCode::Hour->value,
             'detail' => 'work',
         ]);
 

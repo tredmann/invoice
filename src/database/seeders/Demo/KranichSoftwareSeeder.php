@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Demo;
 
+use App\Enums\UnitCode;
 use App\Models\Customer;
 use App\Models\CustomerMailReceiver;
 use App\Models\Invoice;
@@ -325,9 +326,9 @@ class KranichSoftwareSeeder extends Seeder
                 'state' => 'draft',
                 'customer' => 'Müller Maschinenbau GmbH',
                 'line_items' => [
-                    ['quantity' => 12, 'unit' => 'h', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Backend-Entwicklung Phase 2'],
-                    ['quantity' => 4, 'unit' => 'h', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Projektkoordination'],
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 50000, 'tax_rate' => 0.19, 'detail' => 'Architektur-Workshop'],
+                    ['quantity' => 12, 'unit' => UnitCode::Hour->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Backend-Entwicklung Phase 2'],
+                    ['quantity' => 4, 'unit' => UnitCode::Hour->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Projektkoordination'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 50000, 'tax_rate' => 0.19, 'detail' => 'Architektur-Workshop'],
                 ],
             ],
             // 1. Pixelblut Design — Open, mail Sent (+ 1 attachment)
@@ -339,8 +340,8 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'Juni 2026',
                 'line_items' => [
-                    ['quantity' => 8, 'unit' => 'h', 'price_each' => 11000, 'tax_rate' => 0.19, 'detail' => 'CMS-Migration Beratung'],
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 80000, 'tax_rate' => 0.19, 'detail' => 'Datenmigration'],
+                    ['quantity' => 8, 'unit' => UnitCode::Hour->value, 'price_each' => 11000, 'tax_rate' => 0.19, 'detail' => 'CMS-Migration Beratung'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 80000, 'tax_rate' => 0.19, 'detail' => 'Datenmigration'],
                 ],
                 'attachments' => ['project_report.pdf'],
             ],
@@ -354,7 +355,7 @@ class KranichSoftwareSeeder extends Seeder
                 'paid_days_ago' => 14,
                 'performed_when' => 'Mai 2026',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 180000, 'tax_rate' => 0, 'detail' => 'Webseiten-Relaunch'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 180000, 'tax_rate' => 0, 'detail' => 'Webseiten-Relaunch'],
                 ],
             ],
             // 3. Verein für Stadtkultur — Heavily Overdue (7% reduced)
@@ -366,7 +367,7 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'Q1 2026',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 240000, 'tax_rate' => 0.07, 'detail' => 'Kulturplattform-Wartung Q1 2026'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 240000, 'tax_rate' => 0.07, 'detail' => 'Kulturplattform-Wartung Q1 2026'],
                 ],
             ],
             // 4. Pixelblut Design — Mildly Overdue, mail failed
@@ -378,7 +379,7 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'Februar 2026',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Monat', 'price_each' => 15000, 'tax_rate' => 0.19, 'detail' => 'Hosting Februar 2026'],
+                    ['quantity' => 1, 'unit' => UnitCode::Month->value, 'price_each' => 15000, 'tax_rate' => 0.19, 'detail' => 'Hosting Februar 2026'],
                 ],
             ],
             // 5. Müller Maschinenbau — Paid (recurring-generated)
@@ -391,7 +392,7 @@ class KranichSoftwareSeeder extends Seeder
                 'paid_days_ago' => 45,
                 'performed_when' => 'April 2026',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Monat', 'price_each' => 300000, 'tax_rate' => 0.19, 'detail' => 'Monatlicher Retainer April 2026'],
+                    ['quantity' => 1, 'unit' => UnitCode::Month->value, 'price_each' => 300000, 'tax_rate' => 0.19, 'detail' => 'Monatlicher Retainer April 2026'],
                 ],
             ],
             // 6. Studio Bellini — Open, EU intra-community (0%, reverse charge)
@@ -403,8 +404,8 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'Mai 2026',
                 'line_items' => [
-                    ['quantity' => 6, 'unit' => 'h', 'price_each' => 11000, 'tax_rate' => 0, 'detail' => 'Consulting May 2026', 'detail_plus' => 'Reverse charge — VAT to be paid by the recipient (Art. 196 EU VAT Directive).'],
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 40000, 'tax_rate' => 0, 'detail' => 'Reisekosten'],
+                    ['quantity' => 6, 'unit' => UnitCode::Hour->value, 'price_each' => 11000, 'tax_rate' => 0, 'detail' => 'Consulting May 2026', 'detail_plus' => 'Reverse charge — VAT to be paid by the recipient (Art. 196 EU VAT Directive).'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 40000, 'tax_rate' => 0, 'detail' => 'Reisekosten'],
                 ],
             ],
             // 7. Acme Robotics — Open, non-EU export (0%)
@@ -416,9 +417,9 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'May 2026',
                 'line_items' => [
-                    ['quantity' => 16, 'unit' => 'h', 'price_each' => 13000, 'tax_rate' => 0, 'detail' => 'DevOps audit'],
-                    ['quantity' => 1, 'unit' => 'fixed', 'price_each' => 150000, 'tax_rate' => 0, 'detail' => 'Final report and recommendations'],
-                    ['quantity' => 1, 'unit' => 'fixed', 'price_each' => 80000, 'tax_rate' => 0, 'detail' => 'Knowledge transfer session'],
+                    ['quantity' => 16, 'unit' => UnitCode::Hour->value, 'price_each' => 13000, 'tax_rate' => 0, 'detail' => 'DevOps audit'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 150000, 'tax_rate' => 0, 'detail' => 'Final report and recommendations'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 80000, 'tax_rate' => 0, 'detail' => 'Knowledge transfer session'],
                 ],
             ],
             // 8. Müller Maschinenbau — Cancelled
@@ -429,7 +430,7 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'März 2026',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 220000, 'tax_rate' => 0.19, 'detail' => 'Initiale Anforderungsaufnahme (storniert wegen Scope-Streit)'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 220000, 'tax_rate' => 0.19, 'detail' => 'Initiale Anforderungsaufnahme (storniert wegen Scope-Streit)'],
                 ],
             ],
             // 9. Müller Maschinenbau — Cancellation Invoice (paired with index 8)
@@ -441,7 +442,7 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'März 2026 (Storno)',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 220000, 'tax_rate' => 0.19, 'detail' => 'Stornierung Rechnung K-...'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 220000, 'tax_rate' => 0.19, 'detail' => 'Stornierung Rechnung K-...'],
                 ],
             ],
             // 10. Pixelblut Design — Multi-VAT (19% + 7%)
@@ -453,8 +454,8 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'Mai 2026',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Tag', 'price_each' => 120000, 'tax_rate' => 0.19, 'detail' => 'Inhouse-Workshop "Modern Laravel"'],
-                    ['quantity' => 8, 'unit' => 'Stück', 'price_each' => 1800, 'tax_rate' => 0.07, 'detail' => 'Gedruckte Workshop-Unterlagen'],
+                    ['quantity' => 1, 'unit' => UnitCode::Day->value, 'price_each' => 120000, 'tax_rate' => 0.19, 'detail' => 'Inhouse-Workshop "Modern Laravel"'],
+                    ['quantity' => 8, 'unit' => UnitCode::Piece->value, 'price_each' => 1800, 'tax_rate' => 0.07, 'detail' => 'Gedruckte Workshop-Unterlagen'],
                 ],
             ],
             // 11. Müller Maschinenbau — PDF Generation Error
@@ -465,7 +466,7 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'Mai 2026',
                 'line_items' => [
-                    ['quantity' => 4, 'unit' => 'h', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Notfall-Hotfix CI/CD-Pipeline'],
+                    ['quantity' => 4, 'unit' => UnitCode::Hour->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Notfall-Hotfix CI/CD-Pipeline'],
                 ],
             ],
             // 12. Holzbau Eichenhain — Open with extended description (detail_plus)
@@ -479,7 +480,7 @@ class KranichSoftwareSeeder extends Seeder
                 'line_items' => [
                     [
                         'quantity' => 1,
-                        'unit' => 'Pauschal',
+                        'unit' => UnitCode::LumpSum->value,
                         'price_each' => 90000,
                         'tax_rate' => 0,
                         'detail' => 'Online-Shop Erweiterung',
@@ -492,16 +493,16 @@ class KranichSoftwareSeeder extends Seeder
                 'state' => 'draft',
                 'customer' => 'Müller Maschinenbau GmbH',
                 'line_items' => [
-                    ['quantity' => 40, 'unit' => 'h', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Beratungsleistung Anna Kranich'],
-                    ['quantity' => 28, 'unit' => 'h', 'price_each' => 11000, 'tax_rate' => 0.19, 'detail' => 'Entwicklung Lukas Berger'],
-                    ['quantity' => 12, 'unit' => 'h', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Code Review & QA'],
-                    ['quantity' => 4, 'unit' => 'h', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Architektur-Sessions'],
-                    ['quantity' => 2, 'unit' => 'Tag', 'price_each' => 90000, 'tax_rate' => 0.19, 'detail' => 'Vor-Ort-Termine Stuttgart'],
-                    ['quantity' => 4, 'unit' => 'Fahrt', 'price_each' => 18000, 'tax_rate' => 0.19, 'detail' => 'Bahnreisen Berlin–Stuttgart'],
-                    ['quantity' => 6, 'unit' => 'Nacht', 'price_each' => 14500, 'tax_rate' => 0.19, 'detail' => 'Hotelübernachtungen'],
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 25000, 'tax_rate' => 0.19, 'detail' => 'Materialien & Hardware'],
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Lizenzen Dritter (anteilig)'],
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 5000, 'tax_rate' => 0.19, 'detail' => 'Kleinmaterial / Spesen'],
+                    ['quantity' => 40, 'unit' => UnitCode::Hour->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Beratungsleistung Anna Kranich'],
+                    ['quantity' => 28, 'unit' => UnitCode::Hour->value, 'price_each' => 11000, 'tax_rate' => 0.19, 'detail' => 'Entwicklung Lukas Berger'],
+                    ['quantity' => 12, 'unit' => UnitCode::Hour->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Code Review & QA'],
+                    ['quantity' => 4, 'unit' => UnitCode::Hour->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Architektur-Sessions'],
+                    ['quantity' => 2, 'unit' => UnitCode::Day->value, 'price_each' => 90000, 'tax_rate' => 0.19, 'detail' => 'Vor-Ort-Termine Stuttgart'],
+                    ['quantity' => 4, 'unit' => UnitCode::Piece->value, 'price_each' => 18000, 'tax_rate' => 0.19, 'detail' => 'Bahnreisen Berlin–Stuttgart'],
+                    ['quantity' => 6, 'unit' => UnitCode::Piece->value, 'price_each' => 14500, 'tax_rate' => 0.19, 'detail' => 'Hotelübernachtungen'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 25000, 'tax_rate' => 0.19, 'detail' => 'Materialien & Hardware'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Lizenzen Dritter (anteilig)'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 5000, 'tax_rate' => 0.19, 'detail' => 'Kleinmaterial / Spesen'],
                 ],
             ],
             // 14. Pixelblut Design — Open with 2 attachments
@@ -513,8 +514,8 @@ class KranichSoftwareSeeder extends Seeder
                 'days_till_due' => 14,
                 'performed_when' => 'Mai 2026',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 180000, 'tax_rate' => 0.19, 'detail' => 'Projektabschluss "Kundenportal"'],
-                    ['quantity' => 4, 'unit' => 'h', 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Schulung Endnutzer'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 180000, 'tax_rate' => 0.19, 'detail' => 'Projektabschluss "Kundenportal"'],
+                    ['quantity' => 4, 'unit' => UnitCode::Hour->value, 'price_each' => 12000, 'tax_rate' => 0.19, 'detail' => 'Schulung Endnutzer'],
                 ],
                 'attachments' => ['project_report.pdf', 'time_log.pdf'],
             ],
@@ -528,7 +529,7 @@ class KranichSoftwareSeeder extends Seeder
                 'paid_days_ago' => 160,
                 'performed_when' => 'Q4 2025',
                 'line_items' => [
-                    ['quantity' => 1, 'unit' => 'Pauschal', 'price_each' => 480000, 'tax_rate' => 0.07, 'detail' => 'Kulturplattform initiales Setup'],
+                    ['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 480000, 'tax_rate' => 0.07, 'detail' => 'Kulturplattform initiales Setup'],
                 ],
             ],
         ];
@@ -541,22 +542,22 @@ class KranichSoftwareSeeder extends Seeder
         $definitions = [
             // MK-1: Müller — Active monthly
             ['customer' => 'Müller Maschinenbau GmbH', 'status' => 'active', 'frequency' => '1 month', 'next_print_days' => 5, 'days_till_due' => 30,
-             'line_items' => [['quantity' => 1, 'unit' => 'Monat', 'price_each' => 300000, 'tax_rate' => 0.19, 'detail' => 'Monatlicher Retainer (Backend + DevOps)']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::Month->value, 'price_each' => 300000, 'tax_rate' => 0.19, 'detail' => 'Monatlicher Retainer (Backend + DevOps)']]],
             // MK-2: Pixelblut — Active quarterly
             ['customer' => 'Pixelblut Design GbR', 'status' => 'active', 'frequency' => '3 months', 'next_print_days' => 30, 'days_till_due' => 14,
-             'line_items' => [['quantity' => 1, 'unit' => 'Quartal', 'price_each' => 600000, 'tax_rate' => 0.19, 'detail' => 'Quartalsweiser Support-Vertrag']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::Month->value, 'price_each' => 600000, 'tax_rate' => 0.19, 'detail' => 'Quartalsweiser Support-Vertrag']]],
             // MK-3: Acme Robotics — Active half-yearly (0%)
             ['customer' => 'Acme Robotics Inc.', 'status' => 'active', 'frequency' => '6 months', 'next_print_days' => 60, 'days_till_due' => 14,
-             'line_items' => [['quantity' => 1, 'unit' => 'period', 'price_each' => 1200000, 'tax_rate' => 0, 'detail' => 'Half-yearly DevOps subscription (incl. on-call)']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 1200000, 'tax_rate' => 0, 'detail' => 'Half-yearly DevOps subscription (incl. on-call)']]],
             // MK-4: Stadtkultur — Paused monthly (7%)
             ['customer' => 'Verein für Stadtkultur e.V.', 'status' => 'paused', 'frequency' => '1 month', 'next_print_days' => null, 'days_till_due' => 14,
-             'line_items' => [['quantity' => 1, 'unit' => 'Monat', 'price_each' => 80000, 'tax_rate' => 0.07, 'detail' => 'Monatliche Plattformwartung (pausiert)']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::Month->value, 'price_each' => 80000, 'tax_rate' => 0.07, 'detail' => 'Monatliche Plattformwartung (pausiert)']]],
             // MK-5: Holzbau Eichenhain — Draft weekly (0%)
             ['customer' => 'Holzbau Eichenhain', 'status' => 'draft', 'frequency' => '1 week', 'next_print_days' => null, 'days_till_due' => 7,
-             'line_items' => [['quantity' => 1, 'unit' => 'Woche', 'price_each' => 15000, 'tax_rate' => 0, 'detail' => 'Wöchentliche Wartungspauschale']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::LumpSum->value, 'price_each' => 15000, 'tax_rate' => 0, 'detail' => 'Wöchentliche Wartungspauschale']]],
             // MK-6: Studio Bellini — Active daily (0%)
             ['customer' => 'Studio Bellini S.r.l.', 'status' => 'active', 'frequency' => '1 day', 'next_print_days' => 1, 'days_till_due' => 14,
-             'line_items' => [['quantity' => 1, 'unit' => 'day', 'price_each' => 5000, 'tax_rate' => 0, 'detail' => 'Daily usage fee (intra-community, reverse charge)']]],
+             'line_items' => [['quantity' => 1, 'unit' => UnitCode::Day->value, 'price_each' => 5000, 'tax_rate' => 0, 'detail' => 'Daily usage fee (intra-community, reverse charge)']]],
         ];
 
         foreach ($definitions as $def) {

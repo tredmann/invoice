@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Enums\UnitCode;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\LineItem;
@@ -47,7 +48,7 @@ class LineItemControllerTest extends TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
             'currency' => $this->invoice->currency,
@@ -70,7 +71,7 @@ class LineItemControllerTest extends TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
             'currency' => $this->invoice->currency,
@@ -93,5 +94,24 @@ class LineItemControllerTest extends TestCase
     public function testLineItemEdit()
     {
         $this->get(route('lineItems.edit', ['lineItem' => $this->lineItem, 'tenant' => $this->tenant]))->assertOk();
+    }
+
+    public function testLineItemStoreFailsWithInvalidUnit()
+    {
+        $request = [
+            'invoice_id' => $this->invoice->id,
+            'user_id' => $this->user->id,
+            'quantity' => '10.11',
+            'price_each' => '10023.12',
+            'tax_rate' => '0.19',
+            'unit' => 'invalid_unit_string',
+            'detail' => 'Website gestalten',
+            'detail_plus' => 'Website wurde gestaltet',
+            'currency' => $this->invoice->currency,
+            'submit' => 'done',
+            'invoice' => $this->invoice,
+        ];
+
+        $this->post($this->tenant->route('lineItems.store', $request))->assertSessionHasErrors(['unit']);
     }
 }

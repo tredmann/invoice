@@ -27,7 +27,7 @@
                         @money($lineItem->price_each, $lineItem->currency)
                     </td>
                     <td class="fit">
-                        {{$lineItem->unit}}
+                        {{$lineItem->unit->label()}}
                     </td>
                     <td>
                         <p><b>{{$lineItem->detail}}</b></p>

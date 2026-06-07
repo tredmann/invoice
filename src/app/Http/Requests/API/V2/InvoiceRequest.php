@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\API\V2;
 
+use App\Enums\UnitCode;
 use App\Models\Invoice;
 use App\Models\Money;
 use App\Rules\AllowTenantMembers;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class InvoiceRequest extends FormRequest
 {
@@ -35,7 +37,7 @@ class InvoiceRequest extends FormRequest
                 'quantity' => ['required', 'numeric', 'regex:/[\d]+.[\d]{2}/', 'max:999999999999'],
                 'price_each' => ['required', 'numeric', 'regex:/[\d]+.[\d]{2}/', 'max:9999999'],
                 'tax_rate' => ['required', 'float', 'in:' . implode(',', Money::DE_TAX_RATES)],
-                'unit' => ['nullable', 'string', 'max:30'],
+                'unit' => ['required', Rule::enum(UnitCode::class)],
                 'detail' => ['required', 'string', 'max:50'],
                 'detail_plus' => ['nullable', 'string', 'max:255'],
             ],

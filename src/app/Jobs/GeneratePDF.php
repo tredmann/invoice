@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Invoice;
 use App\Modules\InvoiceTemplates\Models\TemplateManager;
 use App\Services\InvoiceDocuments\InvoiceDocumentService;
+use App\Services\InvoiceDocuments\ZugferdService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Throwable;
 
@@ -24,7 +25,8 @@ class GeneratePDF implements ShouldQueue
      */
     public function handle(
         InvoiceDocumentService $invoiceDocumentService,
-        TemplateManager $templateManager
+        TemplateManager $templateManager,
+        ZugferdService $zugferdService
     ): void {
         $tenantKey = $this->invoice->customer->tenant->getTenantKey();
 
@@ -34,13 +36,14 @@ class GeneratePDF implements ShouldQueue
             $template = $templateManager->getTemplate(templateKey: 'invoice-cancellation.pdf', tenantKey: $tenantKey);
         }
 
-        $pdf = $template->render(['invoice' => $this->invoice]);
+        $pdfBytes = $template->render(['invoice' => $this->invoice]);
+        $pdfBytes = $zugferdService->embed($this->invoice, $pdfBytes);
 
         // file type-specific info/content
         $pdfData = [
             'user_id' => $this->invoice->user->id,
             'invoice_id' => $this->invoice->id,
-            'content' => $pdf,
+            'content' => $pdfBytes,
             'extension' => '.pdf',
             'mimeType' => 'application/pdf',
         ];

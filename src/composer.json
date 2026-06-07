@@ -12,6 +12,7 @@
         "balt-technologies/standards": "^0.0.4",
         "diglactic/laravel-breadcrumbs": "^10.0",
         "guzzlehttp/guzzle": "^7.2",
+        "horstoeko/zugferd": "^1.0",
         "laravel/boost": "^2.0",
         "laravel/framework": "^13.0",
         "laravel/jetstream": "^5.0",

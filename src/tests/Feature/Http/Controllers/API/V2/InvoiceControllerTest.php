@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\API\V2;
 
+use App\Enums\UnitCode;
 use App\Helpers\CamelConverter;
 use App\Http\Resources\V2\InvoiceResource;
 use App\Models\Customer;
@@ -60,7 +61,7 @@ class InvoiceControllerTest extends \Tests\TestCase
             'quantity' => 231345,
             'price_each' => 34,
             'tax_rate' => 0.07,
-            'unit' => null,
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
         ];
@@ -147,7 +148,7 @@ class InvoiceControllerTest extends \Tests\TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
         ];
@@ -179,7 +180,7 @@ class InvoiceControllerTest extends \Tests\TestCase
             'quantity' => 231345,
             'price_each' => 34,
             'tax_rate' => 0.07,
-            'unit' => null,
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
         ];
@@ -247,7 +248,7 @@ class InvoiceControllerTest extends \Tests\TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
         ];
@@ -287,7 +288,7 @@ class InvoiceControllerTest extends \Tests\TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
         ];
@@ -325,7 +326,7 @@ class InvoiceControllerTest extends \Tests\TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
         ];
@@ -365,7 +366,7 @@ class InvoiceControllerTest extends \Tests\TestCase
             'quantity' => '10.11',
             'price_each' => '10023.12',
             'tax_rate' => '0.19',
-            'unit' => 'Website',
+            'unit' => UnitCode::Piece->value,
             'detail' => 'Website gestalten',
             'detail_plus' => 'Website wurde gestaltet',
         ];
@@ -394,5 +395,16 @@ class InvoiceControllerTest extends \Tests\TestCase
         $response = $this->actingAs($this->user)->getJson('http://localhost:8080/api/v2/tenant/'.$this->tenant->id.'/invoices/'.$invoice->id);
 
         $response->assertStatus(200);
+    }
+
+    public function testLineItemUnitIsSerializedAsString(): void
+    {
+        $response = $this->postJson('http://localhost:8080/api/v2/tenant/'.$this->tenant->id.'/invoices', $this->body);
+        $response->assertStatus(200);
+
+        $unit = $response->json('lines.0.unit');
+
+        $this->assertIsString($unit);
+        $this->assertSame(UnitCode::Piece->value, $unit);
     }
 }

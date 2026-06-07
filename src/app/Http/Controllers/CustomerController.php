@@ -75,7 +75,9 @@ class CustomerController extends Controller
 
     public function store(CustomerRequest $request, Tenant $tenant)
     {
-        $this->customerService->store($request->validated(), $tenant);
+        $validated = $request->validated();
+        $validated['country'] ??= 'DE';
+        $this->customerService->store($validated, $tenant);
 
         return redirect(route('customers.index', ['tenant' => $tenant]))->with('success', 'Kunden erfolgreich erstellt');
     }
@@ -100,14 +102,18 @@ class CustomerController extends Controller
             'name' => 'nullable|string|max:50',
             'street' => 'required|string|max:100',
             'postal' => 'required|string|max:5',
-            'city' => 'required|string|max:100'
+            'city' => 'required|string|max:100',
+            'country' => 'nullable|string|max:2|in:DE',
         ];
 
         if (Setting::isEnabled($tenant, Settings::EDIT_CUSTOMER_ID)) {
             $validation['customer_no'] = 'required|string';
         }
 
-        $this->customerService->update($request->validate($validation), $customer, $tenant);
+        $validated = $request->validate($validation);
+        $validated['country'] ??= 'DE';
+
+        $this->customerService->update($validated, $customer, $tenant);
 
         return redirect(route('customers.index', ['tenant' => $tenant]))->with(
             'success',

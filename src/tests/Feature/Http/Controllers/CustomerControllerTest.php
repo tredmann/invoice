@@ -53,6 +53,7 @@ class CustomerControllerTest extends TestCase
             'street' => $request['street'],
             'postal' => $request['postal'],
             'city' => $request['city'],
+            'country' => $request['country'],
         ];
 
         $this->actingAs($this->user, 'web')->post('http://localhost:8080/'.$this->tenant->id.'/customers', $request);
@@ -96,5 +97,49 @@ class CustomerControllerTest extends TestCase
         $this->delete($this->tenant->route('customers.destroy', ['customer' => $customer]))->assertRedirect(
             $this->tenant->route('customers.index'),
         );
+    }
+
+    public function testStorePostRouteWithCountryDE()
+    {
+        $request = Customer::factory()
+            ->make([
+                'tenant_id' => $this->tenant->id,
+                'country' => 'DE',
+            ])
+            ->toArray();
+
+        $this->actingAs($this->user, 'web')
+            ->post('http://localhost:8080/'.$this->tenant->id.'/customers', $request)
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('customers', ['country' => 'DE', 'company' => $request['company']]);
+    }
+
+    public function testStorePostRouteWithoutCountryDefaultsToDE()
+    {
+        $request = Customer::factory()
+            ->make(['tenant_id' => $this->tenant->id])
+            ->toArray();
+
+        unset($request['country']);
+
+        $this->actingAs($this->user, 'web')
+            ->post('http://localhost:8080/'.$this->tenant->id.'/customers', $request)
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('customers', ['country' => 'DE', 'company' => $request['company']]);
+    }
+
+    public function testStorePostRouteFailsWhenCountryInvalid()
+    {
+        $request = Customer::factory()
+            ->make(['tenant_id' => $this->tenant->id])
+            ->toArray();
+
+        $request['country'] = 'US';
+
+        $this->actingAs($this->user, 'web')
+            ->post('http://localhost:8080/'.$this->tenant->id.'/customers', $request)
+            ->assertSessionHasErrors('country');
     }
 }
