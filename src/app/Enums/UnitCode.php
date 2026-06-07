@@ -28,7 +28,7 @@ enum UnitCode: string
             self::Kilometre => 'Kilometer',
             self::Kilogram => 'Kilogramm',
             self::Litre => 'Liter',
-            self::Set => 'Set',
+            self::Set => 'Set/Pauschal',
             self::LumpSum => 'Pauschale',
         };
     }
